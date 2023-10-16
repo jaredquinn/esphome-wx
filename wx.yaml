@@ -269,6 +269,7 @@ display:
       FONT_CLOCK = id(font_clock);
       FONT_VALUE_BIG = id(font_values_big);
       FONT_VALUE_SMALL = id(font_values_small);
+      FONT_VALUE = id(font_values);
       FONT_LABELS = id(font_labels);
       FONT_MDI = id(font_mdi);
       FONT_COMPASS = id(font_compass);
@@ -307,7 +308,6 @@ display:
      
       /* Big Time */
       top = 24;
-
       df_clock_widget(it, left, 24, col_4c, top+60);
       int col_L = col_4c;
 
@@ -354,9 +354,7 @@ display:
         df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, id(inside_humidity).state, id(outside_humidity).state, "OUTSIDE");
       }
 
-      it.line(col_4c, top, col_4c, top+rowH, id(color_lines));
-
-      std::string dicon = " ";
+      std::string dicon = "";
       if(id(wind_direction).has_state()) {
         if(id(wind_direction).state == "N")  { dicon = to_string("$ICON_COMPASS_N"); }
         if(id(wind_direction).state == "NE") { dicon = to_string("$ICON_COMPASS_NE"); }
@@ -399,56 +397,35 @@ display:
       rowH = 58;
       left = 0;
 
-      int ht = top + 4; int hv = top + 14; int hu = top + 42;
-
       it.line(0, top, it.get_width(), top, id(color_lines));
 
-      if (id(tvoc).has_state()) {
-        it.printf(left, ht, id(font_labels),  id(color_labels), TextAlign::TOP_LEFT, "BED TVOC");
-        it.printf(left, hu, id(font_labels),  id(color_labels), TextAlign::TOP_LEFT, "ppb");
-        it.printf(left, hv, id(font_values_big),                    TextAlign::TOP_LEFT, "%.0f", id(tvoc).state);
-      }
-
-      if (id(eco2).has_state()) {
-        it.printf(col_3b, ht, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "BED eCO2");
-        it.printf(col_3b, hu, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "ppm");
-        it.printf(col_3b, hv, id(font_values_big),                   TextAlign::TOP_LEFT, "%.0f", id(eco2).state);
-      }
-
-      if (id(pm2_5).has_state()) {
-        it.printf(col_3c, ht, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "LOUNGE PM");
-        it.printf(col_3c, hu, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "PM2.5 ug/m3");
-        it.printf(col_3c, hv, id(font_values_big),                   TextAlign::TOP_LEFT, "%.0f", id(pm2_5).state);
-      }
+      if (id(tvoc).has_state())  { df_big_value(it, left, top, col_3b, top+rowH, "BED TVOC", "ppb", "%.0f", float(id(tvoc).state)); }
+      if (id(eco2).has_state())  { df_big_value(it, col_3b, top, col_3c, top+rowH, "BED eCO2", "ppm", "%.0f", float(id(eco2).state)); }
+      if (id(pm2_5).has_state()) { df_big_value(it, col_3c, top, fullwidth, top+rowH, "LOUNGE PM", "PM2.5 ug/m3", "%.0f", float(id(pm2_5).state)); }
 
       it.line(col_3b-4, top, col_3b-4, top+rowH, id(color_lines));
       it.line(col_3c-4, top, col_3c-4, top+rowH, id(color_lines));
 
       top = top + rowH;
       rowH = 56;
-      ht = top + 23;
-      hv = top + 2;
-      hu = top + 32;
 
       it.line(0, top, it.get_width(), top, id(color_lines));
+
       if (id(bedroom_temperature).has_state()) {
-        it.printf(left, ht, id(font_labels),  id(color_labels), TextAlign::TOP_LEFT, "BEDROOM");
-        it.printf(left, hv, id(font_values),              TextAlign::TOP_LEFT, "%.1f°", id(bedroom_temperature).state);
-        it.printf(left, hu, id(font_values_small),              TextAlign::TOP_LEFT, "%.0f %%", id(bedroom_humidity).state);
+        df_small_temphum(it, left, top, col_4b, top + rowH, 
+            "BEDROOM", "%.1f°", float(id(bedroom_temperature).state), "%.0f %%", float(id(bedroom_humidity).state));
       }
       if (id(kitchen_temperature).has_state()) {
-        it.printf(col_4b, ht, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "KITCHEN");
-        it.printf(col_4b, hv, id(font_values),             TextAlign::TOP_LEFT, "%.1f°", id(kitchen_temperature).state);
-        it.printf(col_4b, hu, id(font_values_small),              TextAlign::TOP_LEFT, "%.0f %%", id(kitchen_humidity).state);
+        df_small_temphum(it, col_4b, top, col_4c, top + rowH, 
+            "KITCHEN", "%.1f°", float(id(kitchen_temperature).state), "%.0f %%", float(id(kitchen_humidity).state));
       }
       if (id(bathroom_temperature).has_state()) {
-        it.printf(col_4c, ht, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "BATHROOM");
-        it.printf(col_4c, hv, id(font_values),             TextAlign::TOP_LEFT, "%.1f°", id(bathroom_temperature).state);
-        it.printf(col_4c, hu, id(font_values_small),              TextAlign::TOP_LEFT, "%.0f %%", id(bathroom_humidity).state);
+        df_small_temphum(it, col_4c, top, col_4d, top + rowH, 
+            "BATHROOM", "%.1f°", float(id(bathroom_temperature).state), "%.0f %%", float(id(bathroom_humidity).state));
       }
       if (id(aquarium_temperature).has_state()) {
-        it.printf(col_4d, ht, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "ISH");
-        it.printf(col_4d, hv, id(font_values_small),             TextAlign::TOP_LEFT, "%.1f°", id(aquarium_temperature).state);
+        df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
+            "FISH TANK", "%.2f°", float(id(aquarium_temperature).state), "", 0);
       }
 
       it.line(col_4b-4, top, col_4b-4, top+rowH, id(color_lines));
