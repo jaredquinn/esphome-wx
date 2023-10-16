@@ -1,0 +1,179 @@
+
+# SENSORS
+
+time:
+  - platform: homeassistant
+    id: nettime
+
+sensor:
+  - platform: homeassistant
+    name: "Outside Temperature"
+    id: outside_temperature
+    entity_id: sensor.balcony_temperature
+
+  - platform: homeassistant
+    name: "Outside Humidty"
+    id: outside_humidity
+    entity_id: sensor.balcony_humidity
+
+  - platform: homeassistant
+    name: "Inside Humidity"
+    id: inside_humidity
+    entity_id: sensor.mi_air_purifier_3_3h_humidity
+
+  - platform: homeassistant
+    name: "Inside Temperature"
+    id: inside_temperature
+    entity_id: sensor.mi_air_purifier_3_3h_temperature
+
+  - platform: homeassistant
+    name: "Kitchen Temperature"
+    id: kitchen_temperature
+    entity_id: sensor.temperature_158d0001c15683
+
+  - platform: homeassistant
+    name: "Bedroom Temperature"
+    id: bedroom_temperature 
+    entity_id: sensor.sht_temperature
+
+  - platform: homeassistant
+    name: "Aquarium Temperature"
+    id: aquarium_temperature 
+    entity_id: sensor.aquarium_temperature
+
+  - platform: homeassistant
+    name: "Bathroom Temperature"
+    id: bathroom_temperature 
+    entity_id: sensor.temperature_158d000222631e
+
+  - platform: homeassistant
+    name: "Bathroom Humidity"
+    id: bathroom_humidity
+    entity_id: sensor.humidity_158d000222631e
+
+  - platform: homeassistant
+    name: "Bedroom Humidity"
+    id: bedroom_humidity
+    entity_id: sensor.sht_humidity
+
+
+  - platform: homeassistant
+    name: "Kitchen Humidty"
+    id: kitchen_humidity
+    entity_id: sensor.humidity_158d0001c15683
+
+
+  - platform: homeassistant
+    name: "PM2.5"
+    id: pm2_5
+    entity_id: sensor.mi_air_purifier_3_3h_pm2_5
+
+  - platform: homeassistant
+    name: "TVOC"
+    id: tvoc
+    entity_id: sensor.tvoc
+
+  - platform: homeassistant
+    name: "eCO²"
+    id: eco2
+    entity_id: sensor.eco2
+
+  - platform: homeassistant
+    name: "Wind Speed"
+    id: wind_speed
+    entity_id: sensor.balcony_windspeed
+
+  - platform: homeassistant
+    name: "Rain Today"
+    id: rain_hr
+    entity_id: sensor.rain_last_hour
+
+  - platform: homeassistant
+    name: "Rain Today"
+    id: rain_today
+    entity_id: sensor.rain_today
+
+  - platform: homeassistant
+    name: "Batrometric Pressure"
+    id: barometric_pressure
+    entity_id: sensor.barometric_pressure
+
+
+text_sensor:
+ 
+  - platform: homeassistant
+    name: "OpenWeather Current"
+    id: weather_condition
+    entity_id: sensor.openweathermap_condition
+
+  - platform: homeassistant
+    name: "OpenWeather"
+    id: forecast
+    entity_id: sensor.forecast_2
+
+  - platform: homeassistant
+    name: "moon"
+    id: moon
+    entity_id: sensor.moon
+
+  - platform: homeassistant
+    name: "Wind Direction"
+    id: wind_direction
+    entity_id: sensor.wind_direction
+
+  - platform: homeassistant
+    name: "Sunrise"
+    id: sunrise
+    entity_id: sensor.nextsunrise
+
+  - platform: homeassistant
+    name: "Sunset"
+    id: sunset
+    entity_id: sensor.nextsunset
+
+binary_sensor:
+
+  - platform: touchscreen
+    id: bottom_A
+    name: Bottom A Touch Button
+    x_min: 1
+    x_max: 60
+    y_min: 200
+    y_max: 339
+
+  - platform: touchscreen
+    id: bottom_B
+    name: Bottom B Touch Button
+    x_min: 60
+    x_max: 120
+    y_min: 200
+    y_max: 339 
+
+  - platform: touchscreen
+    id: bottom_C
+    name: Bottom B Touch Button
+    x_min: 120
+    x_max: 180
+    y_min: 200
+    y_max: 339
+
+  - platform: touchscreen
+    id: bottom_D
+    name: Bottom D Touch Button
+    x_min: 180
+    x_max: 239
+    y_min: 200
+    y_max: 339
+
+  - platform: homeassistant
+    name: "Warning Bed AQ"
+    id: warn_bed_aq
+    entity_id: input_boolean.warn_bed_aq
+
+  - platform: homeassistant
+    name: "Warning Fish Temp"
+    id: warn_fish
+    entity_id: input_boolean.warn_fish
+
+
+
