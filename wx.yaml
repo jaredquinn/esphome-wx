@@ -301,9 +301,11 @@ display:
           it.filled_rectangle(left, top, fullwidth, rowH, cbg);
           it.print(fullwidth/2, top+4, id(font_values), cfg, TextAlign::TOP_CENTER, message);
       } else {
+          /* Buttons coming soon */
+          /*
           it.filled_rectangle(left+1,   top, col_3w-1, rowH, id(button_bg));
           it.filled_rectangle(col_3b+1, top, col_3w-1, rowH, id(button_bg));
-          it.filled_rectangle(col_3c+1, top, col_3w-1, rowH, id(button_bg));
+          it.filled_rectangle(col_3c+1, top, col_3w-1, rowH, id(button_bg));*/
       }
      
       /* Big Time */
@@ -313,36 +315,44 @@ display:
 
       /* Big Weather */
       if(id(weather_condition).has_state()) {
-        if(id(weather_condition).state == "rainy")        { it.print(col_L+4, top+2, id(font_mdi_large), id(my_blue),  TextAlign::TOP_LEFT, "\U000F0597"); }
-        if(id(weather_condition).state == "cloudy")       { it.print(col_L+4, top+2, id(font_mdi_large), id(my_grey),  TextAlign::TOP_LEFT, "\U000F0590"); }
-        if(id(weather_condition).state == "sunny")        { it.print(col_L+4, top+2, id(font_mdi_large), id(my_yellow),TextAlign::TOP_LEFT, "\U000F0599"); }
-        if(id(weather_condition).state == "clear-night")  { it.print(col_L+4, top+2, id(font_mdi_large), id(my_darkblue),TextAlign::TOP_LEFT, "\U000F0594"); }
-        if(id(weather_condition).state == "exceptional")  { it.print(col_L+4, top+2, id(font_mdi_large), id(my_yellow),  TextAlign::TOP_LEFT, "\U000F0005"); }
-        if(id(weather_condition).state == "fog")          { it.print(col_L+4, top+2, id(font_mdi_large), id(my_grey),    TextAlign::TOP_LEFT, "\U000F0591"); }
-        if(id(weather_condition).state == "hail")         { it.print(col_L+4, top+2, id(font_mdi_large), id(my_blue),    TextAlign::TOP_LEFT, "\U000F0592"); }
-        if(id(weather_condition).state == "lightning")    { it.print(col_L+4, top+2, id(font_mdi_large), id(my_red),     TextAlign::TOP_LEFT, "\U000F0593"); }
-        if(id(weather_condition).state == "lightning-rainy") { it.print(col_L+4, top+2, id(font_mdi_large), id(my_red),  TextAlign::TOP_LEFT, "\U000F067E"); }
-        if(id(weather_condition).state == "partlycloudy") { it.print(col_L+4, top+2, id(font_mdi_large), id(my_yellow),  TextAlign::TOP_LEFT, "\U000F0595"); }
-        if(id(weather_condition).state == "pouring")      { it.print(col_L+4, top+2, id(font_mdi_large), id(my_blue),    TextAlign::TOP_LEFT, "\U000F0596"); }
-        if(id(weather_condition).state == "snowy")        { it.print(col_L+4, top+2, id(font_mdi_large), Color::WHITE,   TextAlign::TOP_LEFT, "\U000F0598"); }
-        if(id(weather_condition).state == "snowy-rainy")  { it.print(col_L+4, top+2, id(font_mdi_large), Color::WHITE,   TextAlign::TOP_LEFT, "\U000F067F"); }
-        if(id(weather_condition).state == "windy")        { it.print(col_L+4, top+2, id(font_mdi_large), id(my_blue),    TextAlign::TOP_LEFT, "\U000F059D"); }
-        if(id(weather_condition).state == "windy-variant"){ it.print(col_L+4, top+2, id(font_mdi_large), id(my_blue),    TextAlign::TOP_LEFT, "\U000F059E"); }
+        auto valC = Color::WHITE;
+        std::string icon = "";
 
-        col_L = col_L + 52;
-        it.print(col_L, top+2, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F059A");
-        if(id(sunrise).has_state()) { it.print(fullwidth, top+2,  id(font_values_small), TextAlign::TOP_RIGHT, id(sunrise).state.c_str()); } 
-        if(id(sunset).has_state())  { it.print(fullwidth, top+24, id(font_values_small), TextAlign::TOP_RIGHT, id(sunset).state.c_str()); } 
+        if(id(weather_condition).state == "rainy")           { icon = to_string("$ICON_WX_RAINY");     valC = id(my_blue); }
+        if(id(weather_condition).state == "cloudy")          { icon = to_string("$ICON_WX_CLOUDY");    valC = id(my_grey); }
+        if(id(weather_condition).state == "sunny")           { icon = to_string("$ICON_WX_SUNNY");     valC = id(my_yellow); }
+        if(id(weather_condition).state == "clear-night")     { icon = to_string("$ICON_WX_NIGHT");     valC = id(my_blue); }
+        if(id(weather_condition).state == "exceptional")     { icon = to_string("$ICON_ALERT");        valC = id(my_red); }
+        if(id(weather_condition).state == "fog")             { icon = to_string("$ICON_WX_FOG");       valC = id(my_grey); }
+        if(id(weather_condition).state == "hail")            { icon = to_string("$ICON_WX_HAIL");      valC = id(my_blue); }
+        if(id(weather_condition).state == "lightning")       { icon = to_string("$ICON_WX_LIGHTNING"); valC = id(my_blue); }
+        if(id(weather_condition).state == "lightning-rainy") { icon = to_string("$ICON_WX_LNING_RAIN");valC = id(my_blue); }
+        if(id(weather_condition).state == "partlycloudy")    { icon = to_string("$ICON_WX_PART_CLOUD");valC = id(my_blue); }
+        if(id(weather_condition).state == "pouring")         { icon = to_string("$ICON_WX_POURING");   valC = id(my_blue); }
+        if(id(weather_condition).state == "snowy")           { icon = to_string("$ICON_WX_SNOWY");     valC = Color::WHITE; }
+        if(id(weather_condition).state == "snowy-rainy")     { icon = to_string("$ICON_WX_SNOWRAIN");  valC = Color::WHITE; }
+        if(id(weather_condition).state == "windy")           { icon = to_string("$ICON_WX_WINDY");     valC = Color::WHITE; }
+        if(id(weather_condition).state == "windy-variant")   { icon = to_string("$ICON_WX_WINDY_X");   valC = Color::WHITE; }
 
-        if(id(moon).state == "new_moon")         { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F64"); }
-        if(id(moon).state == "waxing_crescent")  { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F67"); }
-        if(id(moon).state == "first_quarter")    { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F61"); }
-        if(id(moon).state == "waxing_gibbous")   { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F68"); }
-        if(id(moon).state == "full_moon")        { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F62"); }
-        if(id(moon).state == "waning_gibbous")   { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F66"); }
-        if(id(moon).state == "last_quarter")     { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F63"); }
-        if(id(moon).state == "waning_crescent")  { it.print(col_L, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, "\U000F0F65"); }
+        it.print(col_L+4, top+2, id(font_mdi_large), valC, TextAlign::TOP_LEFT, icon.c_str());
       }
+
+      if(id(moon).has_state()) {
+         std::string icon = "";
+         if(id(moon).state == "new_moon")         { icon = to_string("$ICON_MOON_NEW"); }
+         if(id(moon).state == "waxing_crescent")  { icon = to_string("$ICON_MOON_WAX_CRES"); }
+         if(id(moon).state == "first_quarter")    { icon = to_string("$ICON_MOON_1ST_QTR"); }
+         if(id(moon).state == "waxing_gibbous")   { icon = to_string("$ICON_MOON_WAX_GIB"); }
+         if(id(moon).state == "full_moon")        { icon = to_string("$ICON_MOON_FULL"); }
+         if(id(moon).state == "waning_gibbous")   { icon = to_string("$ICON_MOON_WAN_GIB"); }
+         if(id(moon).state == "last_quarter")     { icon = to_string("$ICON_MOON_LAST_QTR"); }
+         if(id(moon).state == "waning_crescent")  { icon = to_string("$ICON_MOON_WAN_CRES"); }
+         it.print(col_L+52, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, icon.c_str());
+      }
+      if(id(sunrise).has_state()) { it.print(fullwidth, top+2,  id(font_values_small), TextAlign::TOP_RIGHT, id(sunrise).state.c_str()); } 
+      if(id(sunset).has_state())  { it.print(fullwidth, top+24, id(font_values_small), TextAlign::TOP_RIGHT, id(sunset).state.c_str()); } 
+      it.print(col_L+52, top+2, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, to_string("$ICON_SUNSET").c_str());
+      
       top = 80;
       rowH = 62;
 
@@ -351,7 +361,7 @@ display:
       }
 
       if (id(outside_temperature).has_state()) {
-        df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, id(inside_humidity).state, id(outside_humidity).state, "OUTSIDE");
+        df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, id(outside_temperature).state, id(outside_humidity).state, "OUTSIDE");
       }
 
       std::string dicon = "";
@@ -399,10 +409,21 @@ display:
 
       it.line(0, top, it.get_width(), top, id(color_lines));
 
-      if (id(tvoc).has_state())  { df_big_value(it, left, top, col_3b, top+rowH, "BED TVOC", "ppb", "%.0f", float(id(tvoc).state)); }
-      if (id(eco2).has_state())  { df_big_value(it, col_3b, top, col_3c, top+rowH, "BED eCO2", "ppm", "%.0f", float(id(eco2).state)); }
-      if (id(pm2_5).has_state()) { df_big_value(it, col_3c, top, fullwidth, top+rowH, "LOUNGE PM", "PM2.5 ug/m3", "%.0f", float(id(pm2_5).state)); }
-
+      if (id(tvoc).has_state())  { 
+         auto valC = Color::WHITE;
+         if(id(tvoc).state > 1000) { valC = id(my_orange); }
+         df_big_value(it, left, top, col_3b, top+rowH, "BED TVOC", "ppb", valC, "%.0f", float(id(tvoc).state)); 
+      }
+      if (id(eco2).has_state())  { 
+         auto valC = Color::WHITE;
+         if(id(eco2).state > 1000) { valC = id(my_orange); }
+         df_big_value(it, col_3b, top, col_3c, top+rowH, "BED eCO2", "ppm", valC, "%.0f", float(id(eco2).state)); 
+      }
+      if (id(pm2_5).has_state()) { 
+         auto valC = Color::WHITE;
+         if(id(pm2_5).state > 100) { valC = id(my_orange); }
+         df_big_value(it, col_3c, top, fullwidth, top+rowH, "LOUNGE PM", "PM2.5 ug/m3", valC, "%.0f", float(id(pm2_5).state)); 
+      }
       it.line(col_3b-4, top, col_3b-4, top+rowH, id(color_lines));
       it.line(col_3c-4, top, col_3c-4, top+rowH, id(color_lines));
 
@@ -413,19 +434,22 @@ display:
 
       if (id(bedroom_temperature).has_state()) {
         df_small_temphum(it, left, top, col_4b, top + rowH, 
-            "BEDROOM", "%.1f°", float(id(bedroom_temperature).state), "%.0f %%", float(id(bedroom_humidity).state));
+            "BEDROOM", "%.1f°", Color::WHITE, float(id(bedroom_temperature).state), "%.0f %%", Color::WHITE, float(id(bedroom_humidity).state));
       }
       if (id(kitchen_temperature).has_state()) {
         df_small_temphum(it, col_4b, top, col_4c, top + rowH, 
-            "KITCHEN", "%.1f°", float(id(kitchen_temperature).state), "%.0f %%", float(id(kitchen_humidity).state));
+            "KITCHEN", "%.1f°", Color::WHITE, float(id(kitchen_temperature).state), "%.0f %%", Color::WHITE, float(id(kitchen_humidity).state));
       }
       if (id(bathroom_temperature).has_state()) {
         df_small_temphum(it, col_4c, top, col_4d, top + rowH, 
-            "BATHROOM", "%.1f°", float(id(bathroom_temperature).state), "%.0f %%", float(id(bathroom_humidity).state));
+            "BATHROOM", "%.1f°", Color::WHITE, float(id(bathroom_temperature).state), "%.0f %%", Color::WHITE, float(id(bathroom_humidity).state));
       }
       if (id(aquarium_temperature).has_state()) {
+        auto color = Color::WHITE;
+        if(id(aquarium_temperature).state < 23 ||
+           id(aquarium_temperature).state > 26) { color = id(my_orange); }
         df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
-            "FISH TANK", "%.2f°", float(id(aquarium_temperature).state), "", 0);
+            "FISH TANK", "%.2f°", color, float(id(aquarium_temperature).state), "", Color::WHITE, 0);
       }
 
       it.line(col_4b-4, top, col_4b-4, top+rowH, id(color_lines));

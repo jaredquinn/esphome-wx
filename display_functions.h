@@ -44,16 +44,16 @@ void df_icon_left(esphome::display::Display &lcd, int left, int top, int right, 
 }
 
 void df_small_temphum(esphome::display::Display &lcd, int left, int top, int right, int bottom, 
-	const char *label, const char *bigformat, float bigvalue, const char *smallformat, float smallvalue) {
+	const char *label, const char *bigformat, esphome::Color bigcolor, float bigvalue, const char *smallformat, esphome::Color smallcolor, float smallvalue) {
    lcd.printf(left, top+24, FONT_LABELS,  id(color_labels), TextAlign::TOP_LEFT, label);
-   lcd.printf(left, top+2, FONT_VALUE, TextAlign::TOP_LEFT, bigformat, bigvalue);
-   lcd.printf(left, top+32, FONT_VALUE_SMALL,  TextAlign::TOP_LEFT, smallformat, smallvalue);
+   lcd.printf(left, top+2, FONT_VALUE, bigcolor, TextAlign::TOP_LEFT, bigformat, bigvalue);
+   lcd.printf(left, top+32, FONT_VALUE_SMALL, smallcolor, TextAlign::TOP_LEFT, smallformat, smallvalue);
 }
 
 void df_big_value(esphome::display::Display &lcd, int left, int top, int right, int bottom, 
-	const char *toplabel, const char *bottomlabel, const char *format, float value) {
+	const char *toplabel, const char *bottomlabel, esphome::Color color, const char *format, float value) {
    lcd.printf(left, top+4, FONT_LABELS,  id(color_labels), TextAlign::TOP_LEFT, toplabel);
    lcd.printf(left, top+42, FONT_LABELS,  id(color_labels), TextAlign::TOP_LEFT, bottomlabel);
-   lcd.printf(left, top+14, FONT_VALUE_BIG, TextAlign::TOP_LEFT, format, value);
+   lcd.printf(left, top+14, FONT_VALUE_BIG, color, TextAlign::TOP_LEFT, format, value);
 }
 
