@@ -1,6 +1,6 @@
 # Holman WS5029 Weather Station Setup
 
-![Weather Station](images/holman.png)
+![Weather Station](related/images/holman.png)
 
 ## Required Hardware
 
