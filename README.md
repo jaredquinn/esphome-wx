@@ -9,7 +9,7 @@ WeeWX Interacts with Home Assistant using MQTT;  Home Assistant is the primary s
 ## Sensors/Data
 
 * OpenWeatherMap
-* Holman Weather Station (related/holman433.md)
+* Holman Weather Station ([my setup](related/holman433.md))
 * Xiaomi Aqara Temp/Humidity Sensors
 * Xiaomi Air Purifier 3H
 * ESPhome BME/Dallas OneWire/SHT Sensors
