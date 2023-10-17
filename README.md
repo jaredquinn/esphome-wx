@@ -118,5 +118,12 @@ esphome:
 Create all the required sensors for the display based on the table above.  You can find a reference
 in example-sensors.yaml.
 
+Download the fonts used in my example:
+
+* Alarm Clock (https://www.dafont.com/alarm-clock.font)
+* Futura (https://freefontsfamily.com/futura-font-family-free/)
+* Material Icons (https://fonts.google.com/icons)
+* Arial 
+
 Append the wx.yaml from this repository to your newly created ESPhome configuration.
 
