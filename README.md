@@ -8,7 +8,7 @@ WeeWX is a free, open source, software program, written in Python, which interac
 
 WeeWX Interacts with Home Assistant using MQTT;  Home Assistant is the primary source of truth for current weather data;  While WeeWX performs conversions, averaging, some forecasting and historic data.
 
-## My Sensors/Data
+### My Sensors/Data
 
 * OpenWeatherMap
 * Holman Weather Station ([my setup](related/holman433.md))
@@ -17,7 +17,7 @@ WeeWX Interacts with Home Assistant using MQTT;  Home Assistant is the primary s
 * ESPhome BME/Dallas OneWire/SHT Sensors
 * ESPhome SGP30 Gas Sensors
 
-More information on how these sensors and data are collected in Home Assistant and WeeWX is beyond the scope of building this display; but further details will be added soon.
+![Full WX Setup](related/image/fullwx.png)
 
 # Building the Display
 
