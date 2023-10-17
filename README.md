@@ -8,7 +8,7 @@ WeeWX is a free, open source, software program, written in Python, which interac
 
 WeeWX Interacts with Home Assistant using MQTT;  Home Assistant is the primary source of truth for current weather data;  While WeeWX performs conversions, averaging, some forecasting and historic data.
 
-## Sensors/Data
+## My Sensors/Data
 
 * OpenWeatherMap
 * Holman Weather Station ([my setup](related/holman433.md))
@@ -125,4 +125,12 @@ Download the fonts used in my example; it expects to find them in the fonts/ dir
 * fonts/arial.ttf - Arial 
 
 Append the wx.yaml from this repository to your newly created ESPhome configuration.
+
+# To Do
+
+* Add touchscreen support/buttons.
+* Add media player controls/summary.
+* Add light/switch controls.
+* Add alarm panel.
+* Design a 3D Printed Case.
 
