@@ -3,7 +3,7 @@
 ![Made for ESPhome](https://esphome.io/_images/made-for-esphome-black-on-white.svg)
 
 More information on my full weather station setup can be found in the related folder,
-a good starting point is the [background document](background.md).
+a good starting point is the [background document](related/background.md).
 
 # Building the Display
 
