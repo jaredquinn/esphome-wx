@@ -81,6 +81,8 @@ display:
 |sunrise|Sensor|Moon Phase|Home Assitant|
 |sunset|Sensor|Moon Phase|Home Assitant|
 
+Current conditions coded in the wx.yaml lambda function for the display convert OpenWeatherMap current conditions to a Material Iconset icon.
+This can easily be adapted for other current conditions reporting.
 
 
 # Get Started
