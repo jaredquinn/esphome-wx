@@ -12,6 +12,8 @@ board as an easy way to deploy a second WX screen to the smart house.
 
 See [all-in-one](related/all-in-one.md) for an ESPhome configuration and pin details.
 
+The full ESPhome configuration, as used by my coffee table unit can be found at (esp32-2432s028.yaml)[esp32-2432s028.yaml].
+
 
 # Building the display
 
