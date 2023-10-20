@@ -124,5 +124,5 @@ display:
 
 ```
 
-Rest of lambda from [wx.yaml](/wx.yaml)
+The lambda function for generating the weather station display can be found in the main [wx.yaml](/wx.yaml)
 
