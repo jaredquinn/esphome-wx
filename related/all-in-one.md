@@ -44,19 +44,19 @@ i2c:
 
 touchscreen:
   platform: xpt2046
-  cs_pin: 33
   interrupt_pin: 36
+  cs_pin: 33
   display: my_display
   id: my_touchscreen
   spi_id: bus_ts
   update_interval: 50ms
   report_interval: 1s
   threshold: 400
-  calibration_x_min: 3860
-  calibration_x_max: 280
-  calibration_y_min: 340
-  calibration_y_max: 3860
-  swap_x_y: false
+  calibration_x_min: 3775
+  calibration_x_max: 404
+  calibration_y_min: 3587
+  calibration_y_max: 289
+  swap_x_y: true
   on_touch:
     - lambda: |-
           ESP_LOGI("cal", "x=%d, y=%d, x_raw=%d, y_raw=%0d",
