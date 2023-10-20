@@ -2,7 +2,7 @@
 
 ## Sunton ESP32-2432S028
 
-![ESP32-2432S028](related/image/esp32-2432s028.jpeg)
+![ESP32-2432S028](image/esp32-2432s028.jpeg)
 
 Often sold as a "LVGL" development board.  [AliExpress](https://www.aliexpress.com/item/1005004502250619.html)
 
