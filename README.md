@@ -5,7 +5,15 @@
 More information on my full weather station setup can be found in the related folder,
 a good starting point is the [background document](related/background.md).
 
-# Building the Display
+# Buying a ready made display
+
+I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
+board as an easy way to deploy a second WX screen to the smart house.
+
+See [all-in-one](related/all-in-one.md) for an ESPhome configuration and pin details.
+
+
+# Building the display
 
 ## Hardware Required
 
