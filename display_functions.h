@@ -8,6 +8,24 @@ esphome::display::BaseFont* FONT_LABELS;
 esphome::display::BaseFont* FONT_MDI;
 esphome::display::BaseFont* FONT_COMPASS;
 
+void df_horizontal_bar(esphome::display::Display &lcd, int top, esphome::Color lineColor) {
+  lcd.line(0, top, lcd.get_width(), top, lineColor);
+}
+void df_boot_screen(esphome::display::Display &lcd) {
+  int center=lcd.get_width()/2;
+  lcd.print(center, 80, FONT_VALUE_BIG, id(my_red), TextAlign::TOP_CENTER, "esphomeWX");
+  lcd.print(center, 160, FONT_VALUE, TextAlign::TOP_CENTER, "Waiting for Connection");
+}
+
+void df_display_calibration_data(esphome::display::Display &lcd, int top) {
+  int colwidth=lcd.get_width()/4;
+  lcd.printf(0, top, FONT_LABELS, TextAlign::TOP_LEFT, "x=%d", id(lastX));
+  lcd.printf(colwidth*1, top, FONT_LABELS, TextAlign::TOP_LEFT, "y=%d", id(lastY));
+  lcd.printf(colwidth*2, top, FONT_LABELS, TextAlign::TOP_LEFT, "rx=%d", id(lastXraw));
+  lcd.printf(colwidth*3, top, FONT_LABELS, TextAlign::TOP_LEFT, "ry=%d", id(lastYraw));
+  lcd.filled_rectangle(id(lastX), id(lastY), 5, 5, id(my_red));
+}
+
 void df_top_bar(esphome::display::Display &lcd, const char *text)
 {
   lcd.filled_rectangle(0, 0, lcd.get_width(), 24, id(bar_bg));
