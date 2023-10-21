@@ -6,6 +6,8 @@
 
 Often sold as a "LVGL" development board.  [AliExpress](https://www.aliexpress.com/item/1005004502250619.html)
 
+Full configuration can be found at [esp32-2432s028.yaml](../esp32-2432s028.yaml).
+
 ### ESPhome Configuration
 
 ```
@@ -18,12 +20,22 @@ esphome:
         uint8_t val = 0x40;
         uint8_t len = 1;
         my_display->send_command(esphome::ili9xxx::ILI9XXX_MADCTL, &val, len);
+```
 
+* Include the display\_functions.h re-used display components library (found in this repoistory)
+* Manual configuration of the Memory Addressing type for the display to bet set on boot.
+
+
+```
 esp32:
   board: esp32dev
   framework:
     type: arduino
+```
 
+* Standard esp32 development board configuration
+
+```
 spi:
    - clk_pin: GPIO14
      mosi_pin: GPIO13
@@ -34,14 +46,24 @@ spi:
      mosi_pin: GPIO32
      miso_pin: GPIO39
      id: bus_ts
+```
 
+* bus\_tft is the SPI bus used by the TFT Display
+* bus\_ts is the SPI bus used by the Touchscreen
+
+* TODO: SD Card support?
+
+```
 i2c:
    - sda: GPIO27
      scl: GPIO22
      scan: true
      id: bus_a
+```
 
+* I don't currently use i2c on the coffee table device however I define the bus anyway.
 
+```
 touchscreen:
   platform: xpt2046
   interrupt_pin: 36
@@ -65,8 +87,12 @@ touchscreen:
               id(my_touchscreen).x_raw,
               id(my_touchscreen).y_raw
               );
+```
 
+* Touchscreen configuration for using this display in portrait orientation.
+* Refer to the full configuration in this repository for my latest calibration values.
 
+```
 output:
 
   - platform: ledc
@@ -87,7 +113,12 @@ output:
     id: output_blue
     pin: GPIO17
     inverted: true
+```
 
+* The TFT Backlight is on GPIO21 and defined using ledc and a monochromatic light
+* LED outputs for the RGB elements on the onboard LED are also defined.
+
+```
 light:
 
   - platform: monochromatic
@@ -103,14 +134,22 @@ light:
     green: output_green
     blue: output_blue
     restore_mode: ALWAYS_OFF
+```
 
+* Light components for the backlight with a default of ALWAYS\_ON
+* RGB Light component for the LED on the board.`
 
+```
 sensor:
   - platform: adc
     pin: 34
     name: "Brightness"
     update_interval: 60s
+```
 
+* Measure the Light Dependent Resistor to adjust the brightness.  The onboard LDR utilises a 1M Ohm voltage divider to provide ranges that seem to be between 0.08V in indoor daylight and 1.0V in reasonably dark room.  This value is used for auto-brightness adjustment.
+
+```
 display:
   - platform: ili9xxx
     id: my_display
@@ -124,5 +163,5 @@ display:
 
 ```
 
-The lambda function for generating the weather station display can be found in the main [wx.yaml](/wx.yaml)
+* The lambda function for generating the weather station display can be found in the main [wx.yaml](/wx.yaml)
 
