@@ -1,0 +1,844 @@
+#
+# Sunton ESP32 2432s028
+# Sunton Store Purchase Link (AliExpress) https://www.aliexpress.com/item/1005004502250619.html
+#
+# 
+esphome:
+  name: coffeetable
+  includes:
+  - display_functions.h
+  on_boot:
+    then:
+      - lambda: |-
+           uint8_t val = 0x40;
+           uint8_t len = 1;
+           my_display->send_command(esphome::ili9xxx::ILI9XXX_MADCTL, &val, len);
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+  level: INFO
+  
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: !secret WIFI_SSID
+  password: !secret WIFI_PSK
+  fast_connect: true
+
+web_server:
+  port: 80
+
+captive_portal:
+
+globals:
+   - id: page
+     type: int
+     initial_value: "1"
+   - id: lastX
+     type: int
+     restore_value: no
+     initial_value: '0'
+   - id: lastY
+     type: int
+     restore_value: no
+     initial_value: '0'
+   - id: lastXraw
+     type: int
+     restore_value: no
+     initial_value: '0'
+   - id: lastYraw
+     type: int
+     restore_value: no
+     initial_value: '0'
+
+   
+spi: 
+   - clk_pin: GPIO14
+     mosi_pin: GPIO13
+     miso_pin: GPIO12
+     id: bus_tft
+
+   - clk_pin: GPIO25
+     mosi_pin: GPIO32
+     miso_pin: GPIO39
+     id: bus_ts
+
+i2c:
+   - sda: GPIO27
+     scl: GPIO22
+     scan: true
+     id: bus_a
+
+time:
+  - platform: homeassistant
+    id: nettime
+
+color:
+  - id: color_lines
+    red: 20%
+    blue: 20%
+    green: 20%
+  - id: button_bg
+    blue: 50%
+    red: 30%
+    green: 30%
+  - id: bar_bg
+    blue: 100%
+    red: 0%
+    green: 0%
+  - id: color_labels
+    red: 60%
+    blue: 60%
+    green: 60%
+  - id: color_clock
+    red: 100%
+    blue: 20%
+    green: 20%
+  - id: my_blue
+    red: 0%
+    green: 0%
+    blue: 100%
+  - id: my_red
+    red: 100%
+    green: 0%
+    blue: 0%
+  - id: my_grey
+    red: 60%
+    blue: 60%
+    green: 60%
+  - id: my_yellow
+    red: 100%
+    green: 100%
+    blue: 0%
+  - id: my_green
+    red: 0%
+    green: 100%
+    blue: 0%
+  - id: my_orange
+    red: 100%
+    green: 50%
+    blue: 0%
+  - id: my_darkblue
+    red: 20%
+    green: 20%
+    blue: 75%
+    
+
+substitutions:
+  NODE: "Coffee Table"
+  TEXT_TITLE: "CatsLair"
+
+  ICON_COMPASS_W:        "\U000F1593"    
+  ICON_COMPASS_NW:       "\U000F1594"
+  ICON_COMPASS_SE:       "\U000F1595"
+  ICON_COMPASS_SW:       "\U000F1596"
+  ICON_COMPASS_N:        "\U000F1597"
+  ICON_COMPASS_NE:       "\U000F1598"
+  ICON_COMPASS_S:        "\U000F1599"
+  ICON_COMPASS_E:        "\U000F159A"
+
+  ICON_ALERT:            "\U000F0005"
+
+  ICON_WX_CLOUDY:        "\U000F0590"
+  ICON_WX_FOG:           "\U000F0591"
+  ICON_WX_HAIL:          "\U000F0592"
+  ICON_WX_LIGHTNING:     "\U000F0593"
+  ICON_WX_NIGHT:         "\U000F0594"
+  ICON_WX_PART_CLOUD:    "\U000F0595"
+  ICON_WX_POURING:       "\U000F0596"
+  ICON_WX_RAINY:         "\U000F0597"
+  ICON_WX_SNOWY:         "\U000F0598"
+  ICON_WX_SUNNY:         "\U000F0599"
+  ICON_WX_WINDY:         "\U000F059D"
+  ICON_WX_WINDY_X:       "\U000F059E"
+
+  ICON_WX_CLOUDY_X:      "\U000F0F2F" # Cloudy Alert
+  ICON_WX_SUNNY_X:       "\U000F0F37" # Sunny Alert
+  ICON_WX_CLOUDY_AR:     "\U000F0E6E" # Cloud Arrow Right
+  ICON_WX_HURRICANE:     "\U000F0898"
+  ICON_WX_LNING_RAIN:    "\U000F067E"
+  ICON_WX_HAZY:          "\U000F0F30"
+  ICON_WX_NIGHT_PART:    "\U000F0F31"
+  ICON_WX_PART_LNING:    "\U000F0F32"
+  ICON_WX_PART_RAIN:     "\U000F0F33"
+  ICON_WX_PART_SNOW:     "\U000F0F34"
+  ICON_WX_PART_SNOWRAIN: "\U000F0F35"
+  ICON_WX_SNOW_HEAVY:    "\U000F0F36"
+  ICON_WX_SNOWRAIN:      "\U000F067F"
+  ICON_WX_SUNNY_OFF:     "\U000F14E4"
+
+  ICON_MOON_1ST_QTR:     "\U000F0F61"
+  ICON_MOON_FULL:        "\U000F0F62"
+  ICON_MOON_LAST_QTR:    "\U000F0F63"
+  ICON_MOON_NEW:         "\U000F0F64"
+  ICON_MOON_WAN_CRES:    "\U000F0F65"
+  ICON_MOON_WAN_GIB:     "\U000F0F66"
+  ICON_MOON_WAX_CRES:    "\U000F0F67"
+  ICON_MOON_WAX_GIB:     "\U000F0F68"
+
+  ICON_SUNSET:           "\U000F059A"
+  ICON_CUP_WATER:        "\U000F01AA"
+  ICON_WATER:            "\U000F058C"
+  ICON_GAUGE:            "\U000F029A"
+
+font:
+
+  - file: "fonts/alarm-clock.ttf"
+    id: font_clock
+    size: 48
+    glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ' ]
+
+  - file: "fonts/arial.ttf"
+    id: font_values_big
+    size: 24
+
+  - file: "fonts/arial.ttf"
+    id: font_labels
+    size: 9
+
+  - file: "fonts/arial.ttf"
+    id: font_values
+    size: 20
+
+  - file: "fonts/arial.ttf"
+    id: font_values_small
+    size: 18
+
+  - file: "fonts/futura.ttf"
+    id: font_title
+    size: 12
+
+  - file: "fonts/mdi.ttf"
+    id: font_compass
+    size: 26
+    glyphs:
+      - $ICON_COMPASS_N
+      - $ICON_COMPASS_NE
+      - $ICON_COMPASS_E
+      - $ICON_COMPASS_SE
+      - $ICON_COMPASS_S
+      - $ICON_COMPASS_SW
+      - $ICON_COMPASS_W
+      - $ICON_COMPASS_NW
+
+  - file: "fonts/mdi.ttf"
+    id: font_mdi_large
+    size: 44
+    glyphs:
+      - $ICON_WX_CLOUDY
+      - $ICON_WX_FOG
+      - $ICON_WX_HAIL
+      - $ICON_WX_LIGHTNING
+      - $ICON_WX_NIGHT
+      - $ICON_WX_PART_CLOUD
+      - $ICON_WX_POURING
+      - $ICON_WX_RAINY
+      - $ICON_WX_SNOWY
+      - $ICON_WX_SUNNY
+      - $ICON_WX_CLOUDY_X
+      - $ICON_WX_SUNNY_X
+      - $ICON_WX_CLOUDY_AR
+      - $ICON_WX_HURRICANE
+      - $ICON_WX_LNING_RAIN
+      - $ICON_WX_HAZY
+      - $ICON_WX_NIGHT_PART
+      - $ICON_WX_PART_LNING
+      - $ICON_WX_PART_RAIN
+      - $ICON_WX_PART_SNOW
+      - $ICON_WX_PART_SNOWRAIN
+      - $ICON_WX_SNOW_HEAVY
+      - $ICON_WX_SNOWRAIN
+      - $ICON_WX_SUNNY_OFF
+      - $ICON_ALERT
+      - $ICON_WX_WINDY
+      - $ICON_WX_WINDY_X
+
+
+  - file: "fonts/mdi.ttf"
+    id: font_mdi
+    size: 20
+    glyphs:
+      - $ICON_MOON_1ST_QTR
+      - $ICON_MOON_FULL
+      - $ICON_MOON_LAST_QTR
+      - $ICON_MOON_NEW
+      - $ICON_MOON_WAN_CRES
+      - $ICON_MOON_WAN_GIB
+      - $ICON_MOON_WAX_CRES
+      - $ICON_MOON_WAX_GIB
+      - $ICON_SUNSET
+      - $ICON_WATER
+      - $ICON_CUP_WATER
+      - $ICON_GAUGE
+
+touchscreen:
+  platform: xpt2046
+  interrupt_pin: 36
+  cs_pin: 33
+  display: my_display
+  id: my_touchscreen
+  spi_id: bus_ts
+  update_interval: 50ms
+  report_interval: 1s
+  threshold: 400
+  calibration_x_min: 3775
+  calibration_x_max: 404
+  calibration_y_min: 3587
+  calibration_y_max: 289
+  swap_x_y: true
+  on_touch:
+    - lambda: |-
+          id(lastX) = id(my_touchscreen).x;
+          id(lastY) = id(my_touchscreen).y;
+          id(lastXraw) = id(my_touchscreen).x_raw;
+          id(lastYraw) = id(my_touchscreen).y_raw;
+          ESP_LOGI("cal", "x=%d, y=%d, x_raw=%d, y_raw=%0d",
+              id(my_touchscreen).x,
+              id(my_touchscreen).y,
+              id(my_touchscreen).x_raw,
+              id(my_touchscreen).y_raw
+              );
+
+output:
+  - platform: gpio
+    pin: GPIO16
+    id: gpio_16
+
+  - platform: ledc
+    pin: GPIO21
+    id: backlight_pin
+
+  - platform: ledc
+    id: output_red
+    pin: GPIO4
+    inverted: true
+
+  - platform: ledc
+    id: output_green
+    pin: GPIO16
+    inverted: true
+
+  - platform: ledc
+    id: output_blue
+    pin: GPIO17
+    inverted: true
+
+
+light:
+
+  - platform: monochromatic
+    output: backlight_pin
+    name: "Display Backlight"
+    id: back_light
+    restore_mode: ALWAYS_ON
+
+  - platform: rgb
+    name: LED
+    id: led
+    red: output_red
+    green: output_green
+    blue: output_blue
+    restore_mode: ALWAYS_OFF
+
+switch:
+  - platform: restart
+    name: "${NODE} ESP32 Restart"
+
+sensor:
+  - platform: uptime
+    name: "${NODE} System Uptime"
+
+  - platform: wifi_signal
+    name: "${NODE} WiFi Signal"
+    update_interval: 15s
+
+  - platform: template
+    name: "${NODE} Test Adjustment"
+    id: brightness_adjust
+
+  - platform: adc
+    pin: 34
+    name: "${NODE} Light Level"
+    id: internal_ldr
+    update_interval: 10s
+    on_value_range:
+      - above: 1.00
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 5%
+      - below: 1.0
+        above: .5
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 10%
+      - above: .25
+        below: .5
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 20%
+      - above: .22
+        below: .25
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 30%
+      - below: .22
+        above: .18
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 40%
+      - below: .18
+        above: .14
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 60%
+      - below: .14
+        above: .08
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 70%
+      - below: .08
+        then:
+          - light.turn_on:
+              id: back_light
+              brightness: 80%
+
+  - platform: homeassistant
+    name: "Outside Temperature"
+    id: outside_temperature
+    entity_id: sensor.balcony_temperature
+
+  - platform: homeassistant
+    name: "Outside Humidty"
+    id: outside_humidity
+    entity_id: sensor.balcony_humidity
+
+  - platform: homeassistant
+    name: "Inside Humidity"
+    id: inside_humidity
+    entity_id: sensor.mi_air_purifier_3_3h_humidity
+
+  - platform: homeassistant
+    name: "Inside Temperature"
+    id: inside_temperature
+    entity_id: sensor.mi_air_purifier_3_3h_temperature
+
+  - platform: homeassistant
+    name: "Kitchen Temperature"
+    id: kitchen_temperature
+    entity_id: sensor.temperature_158d0001c15683
+
+  - platform: homeassistant
+    name: "Bedroom Temperature"
+    id: bedroom_temperature 
+    entity_id: sensor.sht_temperature
+
+  - platform: homeassistant
+    name: "Aquarium Temperature"
+    id: aquarium_temperature 
+    entity_id: sensor.aquarium_temperature
+
+  - platform: homeassistant
+    name: "Bathroom Temperature"
+    id: bathroom_temperature 
+    entity_id: sensor.temperature_158d000222631e
+
+  - platform: homeassistant
+    name: "Bathroom Humidity"
+    id: bathroom_humidity
+    entity_id: sensor.humidity_158d000222631e
+
+  - platform: homeassistant
+    name: "Bedroom Humidity"
+    id: bedroom_humidity
+    entity_id: sensor.sht_humidity
+
+
+  - platform: homeassistant
+    name: "Kitchen Humidty"
+    id: kitchen_humidity
+    entity_id: sensor.humidity_158d0001c15683
+
+
+  - platform: homeassistant
+    name: "PM2.5"
+    id: pm2_5
+    entity_id: sensor.mi_air_purifier_3_3h_pm2_5
+
+  - platform: homeassistant
+    name: "TVOC"
+    id: tvoc
+    entity_id: sensor.tvoc
+
+  - platform: homeassistant
+    name: "eCO²"
+    id: eco2
+    entity_id: sensor.eco2
+
+  - platform: homeassistant
+    name: "Wind Speed"
+    id: wind_speed
+    entity_id: sensor.balcony_windspeed
+
+  - platform: homeassistant
+    name: "Rain Today"
+    id: rain_hr
+    entity_id: sensor.rain_last_hour
+    filters:
+      - multiply: 10
+
+  - platform: homeassistant
+    name: "Rain Today"
+    id: rain_today
+    entity_id: sensor.rain_today
+    filters:
+      - multiply: 10
+
+  - platform: homeassistant
+    name: "Batrometric Pressure"
+    id: barometric_pressure
+    entity_id: sensor.barometric_pressure
+
+
+text_sensor:
+ 
+  - platform: homeassistant
+    name: "OpenWeather Current"
+    id: weather_condition
+    entity_id: sensor.openweathermap_condition
+
+  - platform: homeassistant
+    name: "OpenWeather"
+    id: forecast
+    entity_id: sensor.forecast_2
+
+  - platform: homeassistant
+    name: "moon"
+    id: moon
+    entity_id: sensor.moon
+
+  - platform: homeassistant
+    name: "Wind Direction"
+    id: wind_direction
+    entity_id: sensor.wind_direction
+#    filters:
+#       map:
+#         - NE -> $ICON_COMPASS_NE
+#         - NW -> $ICON_COMPASS_NW
+#         - SE -> $ICON_COMPASS_SE
+#         - SW -> $ICON_COMPASS_SW
+#         - N -> $ICON_COMPASS_N
+#         - E -> $ICON_COMPASS_E
+#         - S -> $ICON_COMPASS_S
+#         - W -> $ICON_COMPASS_W
+
+  - platform: homeassistant
+    name: "Sunrise"
+    id: sunrise
+    entity_id: sensor.nextsunrise
+
+  - platform: homeassistant
+    name: "Sunset"
+    id: sunset
+    entity_id: sensor.nextsunset
+
+binary_sensor:
+
+  - platform: status
+    name: "${NODE} Node Status"
+    id: system_status
+
+  - platform: touchscreen
+    id: bottom_A
+    name: Bottom A Touch Button
+    x_min: 1
+    x_max: 60
+    y_min: 200
+    y_max: 339
+
+  - platform: touchscreen
+    id: bottom_B
+    name: Bottom B Touch Button
+    x_min: 60
+    x_max: 120
+    y_min: 200
+    y_max: 339 
+
+  - platform: touchscreen
+    id: bottom_C
+    name: Bottom B Touch Button
+    x_min: 120
+    x_max: 180
+    y_min: 200
+    y_max: 339
+
+  - platform: touchscreen
+    id: bottom_D
+    name: Bottom D Touch Button
+    x_min: 180
+    x_max: 239
+    y_min: 200
+    y_max: 339
+
+  - platform: homeassistant
+    name: "Warning Bed AQ"
+    id: warn_bed_aq
+    entity_id: input_boolean.warn_bed_aq
+
+  - platform: homeassistant
+    name: "Warning Fish Temp"
+    id: warn_fish
+    entity_id: input_boolean.warn_fish
+
+
+display:
+  - platform: ili9xxx
+    id: my_display
+    spi_id: bus_tft
+    #reset_pin: GPIO25
+    rotation: 90
+    dc_pin: GPIO2
+    cs_pin: GPIO15
+    model: TFT_2.4R
+    data_rate: 40MHz
+    lambda: |-
+       static int fullwidth = it.get_width();
+       static int col_4w = int(fullwidth/4);
+       static int col_3w = int(fullwidth/3);
+       static int col_4b = col_4w;
+       static int col_4c = (col_4w * 2);
+       static int col_4d = (col_4w * 3);
+       static int col_3b = col_3w;
+       static int col_3c = (col_3w * 2);
+
+
+       FONT_TITLE = id(font_title);
+       FONT_CLOCK = id(font_clock);
+       FONT_VALUE_BIG = id(font_values_big);
+       FONT_VALUE_SMALL = id(font_values_small);
+       FONT_VALUE = id(font_values);
+       FONT_LABELS = id(font_labels);
+       FONT_MDI = id(font_mdi);
+       FONT_COMPASS = id(font_compass);
+
+       int left = 0;
+       int rowH = 0;
+       int top = 0;
+
+       it.fill(Color::BLACK);
+
+       if(!id(nettime).now().is_valid()) {
+            df_boot_screen(it);
+       } else {
+
+              /* Top Bar */
+              df_top_bar(it, to_string("${TEXT_TITLE}").c_str());
+
+              /* Bottom Buttons and Alerts */
+              rowH = 32; top = it.get_height() - rowH; 
+              auto bg = Color::BLACK;
+              auto fg = id(my_orange);
+              auto ic = Color::WHITE;
+
+              auto cbg = bg;
+              auto cfg = fg;
+              auto message = "";
+
+              if(id(warn_bed_aq).state == true) { fg = id(my_orange); message = "BEDROOM AQ WARNING"; } 
+              else if(id(warn_fish).state == true) { fg = id(my_blue); message = "FISH TEMP WARNING"; }
+
+              if(message != "") {
+                  if(id(nettime).now().second % 2 == 0) { cbg = bg; cfg = fg; } else { cbg = fg; cfg = bg; }
+                  it.filled_rectangle(left, top, fullwidth, rowH, cbg);
+                  it.print(fullwidth/2, top+4, id(font_values), cfg, TextAlign::TOP_CENTER, message);
+              } else {
+                  /* Buttons coming soon */
+                  /*
+                  it.filled_rectangle(left+1,   top, col_3w-1, rowH, id(button_bg));
+                  it.filled_rectangle(col_3b+1, top, col_3w-1, rowH, id(button_bg));
+                  it.filled_rectangle(col_3c+1, top, col_3w-1, rowH, id(button_bg));*/
+              }
+             
+              /* Big Time */
+              top = 24;
+              df_clock_widget(it, left, 24, col_4c, top+60);
+              int col_L = col_4c;
+
+              /* Big Weather */
+              if(id(weather_condition).has_state()) {
+                auto valC = Color::WHITE;
+                std::string icon = "";
+
+                if(id(weather_condition).state == "rainy")           { icon = to_string("$ICON_WX_RAINY");     valC = id(my_blue); }
+                if(id(weather_condition).state == "cloudy")          { icon = to_string("$ICON_WX_CLOUDY");    valC = id(my_grey); }
+                if(id(weather_condition).state == "sunny")           { icon = to_string("$ICON_WX_SUNNY");     valC = id(my_yellow); }
+                if(id(weather_condition).state == "clear-night")     { icon = to_string("$ICON_WX_NIGHT");     valC = id(my_blue); }
+                if(id(weather_condition).state == "exceptional")     { icon = to_string("$ICON_ALERT");        valC = id(my_red); }
+                if(id(weather_condition).state == "fog")             { icon = to_string("$ICON_WX_FOG");       valC = id(my_grey); }
+                if(id(weather_condition).state == "hail")            { icon = to_string("$ICON_WX_HAIL");      valC = id(my_blue); }
+                if(id(weather_condition).state == "lightning")       { icon = to_string("$ICON_WX_LIGHTNING"); valC = id(my_blue); }
+                if(id(weather_condition).state == "lightning-rainy") { icon = to_string("$ICON_WX_LNING_RAIN");valC = id(my_blue); }
+                if(id(weather_condition).state == "partlycloudy")    { icon = to_string("$ICON_WX_PART_CLOUD");valC = id(my_blue); }
+                if(id(weather_condition).state == "pouring")         { icon = to_string("$ICON_WX_POURING");   valC = id(my_blue); }
+                if(id(weather_condition).state == "snowy")           { icon = to_string("$ICON_WX_SNOWY");     valC = Color::WHITE; }
+                if(id(weather_condition).state == "snowy-rainy")     { icon = to_string("$ICON_WX_SNOWRAIN");  valC = Color::WHITE; }
+                if(id(weather_condition).state == "windy")           { icon = to_string("$ICON_WX_WINDY");     valC = Color::WHITE; }
+                if(id(weather_condition).state == "windy-variant")   { icon = to_string("$ICON_WX_WINDY_X");   valC = Color::WHITE; }
+
+                it.print(col_L+4, top+2, id(font_mdi_large), valC, TextAlign::TOP_LEFT, icon.c_str());
+              }
+
+              if(id(moon).has_state()) {
+                 std::string icon = "";
+                 if(id(moon).state == "new_moon")         { icon = to_string("$ICON_MOON_NEW"); }
+                 if(id(moon).state == "waxing_crescent")  { icon = to_string("$ICON_MOON_WAX_CRES"); }
+                 if(id(moon).state == "first_quarter")    { icon = to_string("$ICON_MOON_1ST_QTR"); }
+                 if(id(moon).state == "waxing_gibbous")   { icon = to_string("$ICON_MOON_WAX_GIB"); }
+                 if(id(moon).state == "full_moon")        { icon = to_string("$ICON_MOON_FULL"); }
+                 if(id(moon).state == "waning_gibbous")   { icon = to_string("$ICON_MOON_WAN_GIB"); }
+                 if(id(moon).state == "last_quarter")     { icon = to_string("$ICON_MOON_LAST_QTR"); }
+                 if(id(moon).state == "waning_crescent")  { icon = to_string("$ICON_MOON_WAN_CRES"); }
+                 it.print(col_L+52, top+24, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, icon.c_str());
+              }
+              if(id(sunrise).has_state()) { it.print(fullwidth, top+2,  id(font_values_small), TextAlign::TOP_RIGHT, id(sunrise).state.c_str()); } 
+              if(id(sunset).has_state())  { it.print(fullwidth, top+24, id(font_values_small), TextAlign::TOP_RIGHT, id(sunset).state.c_str()); } 
+              it.print(col_L+52, top+2, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, to_string("$ICON_SUNSET").c_str());
+              
+              top = 80;
+              rowH = 62;
+
+              if (id(inside_temperature).has_state()) {
+                df_big_temphumid(it, col_4c, top, col_4d, top+rowH, id(inside_temperature).state, id(inside_humidity).state, "INSIDE");
+              }
+
+              if (id(outside_temperature).has_state()) {
+                df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, id(outside_temperature).state, id(outside_humidity).state, "OUTSIDE");
+              }
+
+              std::string dicon = "";
+              if(id(wind_direction).has_state()) {
+                if(id(wind_direction).state == "N")  { dicon = to_string("$ICON_COMPASS_N"); }
+                if(id(wind_direction).state == "NE") { dicon = to_string("$ICON_COMPASS_NE"); }
+                if(id(wind_direction).state == "E")  { dicon = to_string("$ICON_COMPASS_E"); }
+                if(id(wind_direction).state == "SE") { dicon = to_string("$ICON_COMPASS_SE"); }
+                if(id(wind_direction).state == "S")  { dicon = to_string("$ICON_COMPASS_S"); }
+                if(id(wind_direction).state == "SW") { dicon = to_string("$ICON_COMPASS_SW"); }
+                if(id(wind_direction).state == "W")  { dicon = to_string("$ICON_COMPASS_W"); }
+                if(id(wind_direction).state == "NW") { dicon = to_string("$ICON_COMPASS_NW"); }
+                if(id(wind_speed).has_state()) {
+                   df_icon_left(it, 2, top, col_4c, top+rowH, "km/h", "wind", 
+                            FONT_COMPASS, dicon.c_str(), Color::WHITE, "%.0f", float(id(wind_speed).state));
+                }
+              }
+
+              switch (id(page)){
+                 case 1:
+                      rowH = 29;
+                      /* RAIN HOUR */
+                      top = top + rowH;
+                      ic = id(my_grey);
+                      if(id(rain_hr).has_state()) {
+                         if(id(rain_hr).state > 0) { ic = id(my_blue); }
+                         df_icon_left(it, 2, top, col_4c, top+rowH, "mm", "hour", 
+                              FONT_MDI, to_string("$ICON_WATER").c_str(), ic, 
+                              "%.1f", float(id(rain_hr).state*10));
+                      }
+                      /* RAIN TODAY */
+                      top = top + rowH;
+                      ic = id(my_grey);
+                      if(id(rain_today).has_state()) {
+                        if(id(rain_today).state > 0) { ic = id(my_blue); }
+                        df_icon_left(it, 2, top, col_4c, top+rowH, "mm", "24h", 
+                               FONT_MDI, to_string("$ICON_WATER").c_str(), ic, 
+                               "%.1f", float(id(rain_today).state*10));
+                      }
+                      /* BAROMETRIC PRESSURE */
+                      if(id(barometric_pressure).has_state()) {
+                        df_icon_left(it, col_4c, top, fullwidth, top+rowH, "", "hPa", 
+                               FONT_MDI, to_string("$ICON_GAUGE").c_str(), id(my_grey), 
+                               "%.0f", float(id(barometric_pressure).state));
+                      }
+
+                      top = top + rowH;
+                      rowH = 58;
+                      left = 0;
+                      df_horizontal_bar(it, top, id(color_lines));
+
+                      if (id(tvoc).has_state())  { 
+                         auto valC = Color::WHITE;
+                         if(id(tvoc).state > 1000) { valC = id(my_orange); }
+                         df_big_value(it, left, top, col_3b, top+rowH, 
+                                      "BED TVOC", "ppb", valC, "%.0f", float(id(tvoc).state)); 
+                      }
+
+                      it.line(col_3b-4, top, col_3b-4, top+rowH, id(color_lines));
+
+                      if (id(eco2).has_state())  { 
+                         auto valC = Color::WHITE;
+                         if(id(eco2).state > 1000) { valC = id(my_orange); }
+                         df_big_value(it, col_3b, top, col_3c, top+rowH, 
+                                       "BED eCO2", "ppm", valC, "%.0f", float(id(eco2).state)); 
+                      }
+
+                      it.line(col_3c-4, top, col_3c-4, top+rowH, id(color_lines));
+
+                      if (id(pm2_5).has_state()) { 
+                         auto valC = Color::WHITE;
+                         if(id(pm2_5).state > 100) { valC = id(my_orange); }
+                         df_big_value(it, col_3c, top, fullwidth, top+rowH, 
+                                       "LOUNGE PM", "PM2.5 ug/m3", valC, "%.0f", float(id(pm2_5).state)); 
+                      }
+
+                      top = top + rowH;
+                      rowH = 56;
+
+                      it.line(0, top, it.get_width(), top, id(color_lines));
+
+                      if (id(bedroom_temperature).has_state()) {
+                        df_small_temphum(it, left, top, col_4b, top + rowH, 
+                            "BEDROOM", "%.1f°", Color::WHITE, float(id(bedroom_temperature).state), 
+                                       "%.0f %%", Color::WHITE, float(id(bedroom_humidity).state));
+                      }
+                      it.line(col_4b-4, top, col_4b-4, top+rowH, id(color_lines));
+                      if (id(kitchen_temperature).has_state()) {
+                        df_small_temphum(it, col_4b, top, col_4c, top + rowH, 
+                            "KITCHEN", "%.1f°", Color::WHITE, float(id(kitchen_temperature).state), 
+                                       "%.0f %%", Color::WHITE, float(id(kitchen_humidity).state));
+                      }
+                      it.line(col_4c-4, top, col_4c-4, top+rowH, id(color_lines));
+                      if (id(bathroom_temperature).has_state()) {
+                        df_small_temphum(it, col_4c, top, col_4d, top + rowH, 
+                            "BATHROOM", "%.1f°", Color::WHITE, float(id(bathroom_temperature).state), 
+                                        "%.0f %%", Color::WHITE, float(id(bathroom_humidity).state));
+                      }
+                      it.line(col_4d-4, top, col_4d-4, top+rowH, id(color_lines));
+                      if (id(aquarium_temperature).has_state()) {
+                        auto color = Color::WHITE;
+                        if(id(aquarium_temperature).state < 23 ||
+                           id(aquarium_temperature).state > 26) { color = id(my_orange); }
+                        df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
+                            "FISH TANK", "%.2f°", color, float(id(aquarium_temperature).state), 
+                                         "%.2fv", Color::WHITE, float(id(internal_ldr).state));
+                      }
+                      top = top + rowH;
+                      df_horizontal_bar(it, top, id(color_lines));
+                      break;
+
+              } /*end switch*/
+              /*df_display_calibration_data(it, top);*/
+        }
