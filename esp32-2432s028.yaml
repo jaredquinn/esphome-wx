@@ -1,12 +1,9 @@
-#
-# Sunton ESP32 2432s028
-# Sunton Store Purchase Link (AliExpress) https://www.aliexpress.com/item/1005004502250619.html
-#
-# 
+
 esphome:
-  name: coffeetable
+  name: screen2
   includes:
   - display_functions.h
+  - auto_dim.h
   on_boot:
     then:
       - lambda: |-
@@ -88,7 +85,7 @@ color:
     blue: 20%
     green: 20%
   - id: button_bg
-    blue: 50%
+    blue: 80%
     red: 30%
     green: 30%
   - id: bar_bg
@@ -189,6 +186,20 @@ substitutions:
   ICON_CUP_WATER:        "\U000F01AA"
   ICON_WATER:            "\U000F058C"
   ICON_GAUGE:            "\U000F029A"
+
+number:
+  - platform: template
+    name: "Auto Brightness Adjustment"
+    id: bright_adjust
+    optimistic: true
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    on_value:
+      - lambda: |-
+            float c = float(1.08 - (id(internal_ldr).state)*(x/100));
+            brightness_trans(c);
 
 font:
 
@@ -355,69 +366,80 @@ switch:
 
 sensor:
   - platform: uptime
+    id: up
     name: "${NODE} System Uptime"
+    update_interval: 1s
 
   - platform: wifi_signal
     name: "${NODE} WiFi Signal"
-    update_interval: 15s
+    id: wifi_db
+    update_interval: 5s
 
   - platform: template
-    name: "${NODE} Test Adjustment"
-    id: brightness_adjust
+    name: "Backlight Brightness Value"
+    id: "brightness_value"
+    update_interval: 1s
+    accuracy_decimals: 0
+    lambda: |-
+      return (int(id(back_light).current_values.get_brightness() * 100));
 
   - platform: adc
     pin: 34
     name: "${NODE} Light Level"
     id: internal_ldr
-    update_interval: 10s
-    on_value_range:
-      - above: 1.00
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 5%
-      - below: 1.0
-        above: .5
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 10%
-      - above: .25
-        below: .5
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 20%
-      - above: .22
-        below: .25
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 30%
-      - below: .22
-        above: .18
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 40%
-      - below: .18
-        above: .14
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 60%
-      - below: .14
-        above: .08
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 70%
-      - below: .08
-        then:
-          - light.turn_on:
-              id: back_light
-              brightness: 80%
-
+    update_interval: 1s
+    on_value:
+      - lambda: |-
+            float c = float((1.08-x)*(int(id(bright_adjust).state)/100));
+            brightness_trans(c);
+            
+#      - above: 1.00
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 5%
+#      - below: 1.0
+#        above: .5
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 10%
+#      - above: .25
+#        below: .5
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 20%
+#      - above: .22
+#        below: .25
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 30%
+#      - below: .22
+#        above: .18
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 40%
+#      - below: .18
+#        above: .14
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 60%
+#      - below: .14
+#        above: .08
+#        then:
+#          - light.turn_on:
+##              id: back_light
+#              brightness: 70%
+#      - below: .08
+#        then:
+#          - light.turn_on:
+#              id: back_light
+#              brightness: 80%
+#
   - platform: homeassistant
     name: "Outside Temperature"
     id: outside_temperature
@@ -565,35 +587,32 @@ binary_sensor:
 
   - platform: touchscreen
     id: bottom_A
-    name: Bottom A Touch Button
+    name: Bottom Left Touch Button
     x_min: 1
-    x_max: 60
+    x_max: 80
     y_min: 200
     y_max: 339
+    on_press:
+      - lambda: id(page) = 1;
+       
 
   - platform: touchscreen
     id: bottom_B
-    name: Bottom B Touch Button
-    x_min: 60
-    x_max: 120
+    name: Bottom Center Touch Button
+    x_min: 80 
+    x_max: 160
     y_min: 200
     y_max: 339 
 
   - platform: touchscreen
     id: bottom_C
-    name: Bottom B Touch Button
-    x_min: 120
-    x_max: 180
+    name: Bottom Right Touch Button
+    x_min: 160
+    x_max: 240
     y_min: 200
     y_max: 339
-
-  - platform: touchscreen
-    id: bottom_D
-    name: Bottom D Touch Button
-    x_min: 180
-    x_max: 239
-    y_min: 200
-    y_max: 339
+    on_press:
+      - lambda: id(page) = 2;
 
   - platform: homeassistant
     name: "Warning Bed AQ"
@@ -625,6 +644,7 @@ display:
        static int col_4d = (col_4w * 3);
        static int col_3b = col_3w;
        static int col_3c = (col_3w * 2);
+       auto ic = Color::WHITE;
 
 
        FONT_TITLE = id(font_title);
@@ -649,31 +669,6 @@ display:
               /* Top Bar */
               df_top_bar(it, to_string("${TEXT_TITLE}").c_str());
 
-              /* Bottom Buttons and Alerts */
-              rowH = 32; top = it.get_height() - rowH; 
-              auto bg = Color::BLACK;
-              auto fg = id(my_orange);
-              auto ic = Color::WHITE;
-
-              auto cbg = bg;
-              auto cfg = fg;
-              auto message = "";
-
-              if(id(warn_bed_aq).state == true) { fg = id(my_orange); message = "BEDROOM AQ WARNING"; } 
-              else if(id(warn_fish).state == true) { fg = id(my_blue); message = "FISH TEMP WARNING"; }
-
-              if(message != "") {
-                  if(id(nettime).now().second % 2 == 0) { cbg = bg; cfg = fg; } else { cbg = fg; cfg = bg; }
-                  it.filled_rectangle(left, top, fullwidth, rowH, cbg);
-                  it.print(fullwidth/2, top+4, id(font_values), cfg, TextAlign::TOP_CENTER, message);
-              } else {
-                  /* Buttons coming soon */
-                  /*
-                  it.filled_rectangle(left+1,   top, col_3w-1, rowH, id(button_bg));
-                  it.filled_rectangle(col_3b+1, top, col_3w-1, rowH, id(button_bg));
-                  it.filled_rectangle(col_3c+1, top, col_3w-1, rowH, id(button_bg));*/
-              }
-             
               /* Big Time */
               top = 24;
               df_clock_widget(it, left, 24, col_4c, top+60);
@@ -720,37 +715,40 @@ display:
               it.print(col_L+52, top+2, id(font_mdi), id(my_grey), TextAlign::TOP_LEFT, to_string("$ICON_SUNSET").c_str());
               
               top = 80;
-              rowH = 62;
-
-              if (id(inside_temperature).has_state()) {
-                df_big_temphumid(it, col_4c, top, col_4d, top+rowH, id(inside_temperature).state, id(inside_humidity).state, "INSIDE");
-              }
-
-              if (id(outside_temperature).has_state()) {
-                df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, id(outside_temperature).state, id(outside_humidity).state, "OUTSIDE");
-              }
-
               std::string dicon = "";
-              if(id(wind_direction).has_state()) {
-                if(id(wind_direction).state == "N")  { dicon = to_string("$ICON_COMPASS_N"); }
-                if(id(wind_direction).state == "NE") { dicon = to_string("$ICON_COMPASS_NE"); }
-                if(id(wind_direction).state == "E")  { dicon = to_string("$ICON_COMPASS_E"); }
-                if(id(wind_direction).state == "SE") { dicon = to_string("$ICON_COMPASS_SE"); }
-                if(id(wind_direction).state == "S")  { dicon = to_string("$ICON_COMPASS_S"); }
-                if(id(wind_direction).state == "SW") { dicon = to_string("$ICON_COMPASS_SW"); }
-                if(id(wind_direction).state == "W")  { dicon = to_string("$ICON_COMPASS_W"); }
-                if(id(wind_direction).state == "NW") { dicon = to_string("$ICON_COMPASS_NW"); }
-                if(id(wind_speed).has_state()) {
-                   df_icon_left(it, 2, top, col_4c, top+rowH, "km/h", "wind", 
-                            FONT_COMPASS, dicon.c_str(), Color::WHITE, "%.0f", float(id(wind_speed).state));
-                }
-              }
 
               switch (id(page)){
                  case 1:
+                      rowH = 62;
+
+                      if (id(inside_temperature).has_state()) {
+                         df_big_temphumid(it, col_4c, top, col_4d, top+rowH, 
+                                          id(inside_temperature).state, id(inside_humidity).state, "INSIDE");
+                      }
+
+                      if (id(outside_temperature).has_state()) {
+                         df_big_temphumid(it, col_4d, top, fullwidth, top+rowH, 
+                                          id(outside_temperature).state, id(outside_humidity).state, "OUTSIDE");
+                      }
+
+                      if(id(wind_direction).has_state()) {
+                        if(id(wind_direction).state == "N")  { dicon = to_string("$ICON_COMPASS_N"); }
+                        if(id(wind_direction).state == "NE") { dicon = to_string("$ICON_COMPASS_NE"); }
+                        if(id(wind_direction).state == "E")  { dicon = to_string("$ICON_COMPASS_E"); }
+                        if(id(wind_direction).state == "SE") { dicon = to_string("$ICON_COMPASS_SE"); }
+                        if(id(wind_direction).state == "S")  { dicon = to_string("$ICON_COMPASS_S"); }
+                        if(id(wind_direction).state == "SW") { dicon = to_string("$ICON_COMPASS_SW"); }
+                        if(id(wind_direction).state == "W")  { dicon = to_string("$ICON_COMPASS_W"); }
+                        if(id(wind_direction).state == "NW") { dicon = to_string("$ICON_COMPASS_NW"); }
+                        if(id(wind_speed).has_state()) {
+                           df_icon_left(it, 2, top, col_4c, top+rowH, "km/h", "wind", 
+                                    FONT_COMPASS, dicon.c_str(), Color::WHITE, "%.0f", float(id(wind_speed).state));
+                        }
+                      }
                       rowH = 29;
-                      /* RAIN HOUR */
                       top = top + rowH;
+
+                      /* RAIN HOUR */
                       ic = id(my_grey);
                       if(id(rain_hr).has_state()) {
                          if(id(rain_hr).state > 0) { ic = id(my_blue); }
@@ -839,6 +837,55 @@ display:
                       df_horizontal_bar(it, top, id(color_lines));
                       break;
 
+                 case 2:
+                      if (id(internal_ldr).has_state()) {
+                        df_small_temphum(it, left, top, fullwidth, top + rowH, 
+                            "BACKLIGHT", "%.2fv", Color::WHITE, float(id(internal_ldr).state), 
+                                         "%.0f%%", Color::WHITE, float(id(brightness_value).state));
+                      }
+
+                      if (id(bright_adjust).has_state()) {
+                        df_small_temphum(it, col_4b, top, fullwidth, top + rowH, 
+                            "BRIGHT", "%.0f%%", Color::WHITE, float(id(bright_adjust).state), 
+                                         "", Color::WHITE, float(id(brightness_value).state));
+                      }
+                      if (id(internal_ldr).has_state()) {
+                        df_small_temphum(it, col_4c, top, fullwidth, top + rowH, 
+                            "UPTIME", "%.0fm", Color::WHITE, float(int(id(up).state)/60),
+                                      "%.0fs", Color::WHITE, float(int(id(up).state)%60));
+                      }
+                      if (id(wifi_db).has_state()) {
+                        df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
+                            "WIFI", "%.0f", Color::WHITE, float(id(wifi_db).state),
+                                      "dBm", Color::WHITE, float(int(id(up).state)%60));
+                      }
+                      top = top + rowH;
+                      break;
+
               } /*end switch*/
               /*df_display_calibration_data(it, top);*/
+
+              /* Bottom Buttons and Alerts */
+              rowH = 32; top = it.get_height() - rowH; 
+              auto bg = Color::BLACK;
+              auto fg = id(my_orange);
+
+              auto cbg = bg;
+              auto cfg = fg;
+              auto message = "";
+
+              if(id(warn_bed_aq).state == true) { fg = id(my_orange); message = "BEDROOM AQ WARNING"; } 
+              else if(id(warn_fish).state == true) { fg = id(my_blue); message = "FISH TEMP WARNING"; }
+
+              if(message != "") {
+                  if(id(nettime).now().second % 2 == 0) { cbg = bg; cfg = fg; } else { cbg = fg; cfg = bg; }
+                  it.filled_rectangle(left, top, fullwidth, rowH, cbg);
+                  it.print(fullwidth/2, top+4, id(font_values), cfg, TextAlign::TOP_CENTER, message);
+              } else {
+                  /* Buttons coming soon */
+                  df_button(it, left+1, top, col_3w-1, rowH, "HOME");
+                  /*(col_3b+1, top, col_3w-1, rowH, id(button_bg));*/
+                  df_button(it, col_3c+1, top, col_3w-1, rowH, "SYSTEM");
+              }
         }
+
