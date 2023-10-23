@@ -129,7 +129,6 @@ Append the wx.yaml from this repository to your newly created ESPhome configurat
 
 # To Do
 
-* Add touchscreen support/buttons.
 * Add media player controls/summary.
 * Add light/switch controls.
 * Add alarm panel.
