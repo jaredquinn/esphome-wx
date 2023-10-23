@@ -12,6 +12,9 @@ board as an easy way to deploy a second WX screen to the smart house.
 
 See [all-in-one](related/all-in-one.md) for an ESPhome configuration and pin details.
 
+This device also contains an LDR for display brightness adjustment, for this you can define an adjustment value, 
+the voltage range and utilise auto\_dim.h.
+
 The full ESPhome configuration, as used by my coffee table unit can be found at [esp32-2432s028.yaml](esp32-2432s028.yaml).
 
 
