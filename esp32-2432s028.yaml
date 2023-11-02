@@ -189,7 +189,7 @@ substitutions:
 
 number:
   - platform: template
-    name: "Auto Brightness Adjustment"
+    name: "${NODE} Brightness Adjustment"
     id: bright_adjust
     optimistic: true
     min_value: 0
@@ -198,7 +198,10 @@ number:
     restore_value: true
     on_value:
       - lambda: |-
-            float c = float(1.08 - (id(internal_ldr).state)*(x/100));
+            float a = 1.08 - id(internal_ldr).state;
+            float b = float(x/100);
+            float c = a * b;
+            ESP_LOGI("bright/adjust", "x=%.2f, a=%.2f, b=%.2f, c=%.2f", x, a, b, c);
             brightness_trans(c);
 
 font:
@@ -223,6 +226,10 @@ font:
   - file: "fonts/arial.ttf"
     id: font_values_small
     size: 18
+
+  - file: "fonts/arial.ttf"
+    id: font_values_tiny
+    size: 12
 
   - file: "fonts/futura.ttf"
     id: font_title
@@ -320,14 +327,12 @@ touchscreen:
               );
 
 output:
-  - platform: gpio
-    pin: GPIO16
-    id: gpio_16
-
+# Internal LED
   - platform: ledc
     pin: GPIO21
     id: backlight_pin
 
+# Other LEDs
   - platform: ledc
     id: output_red
     pin: GPIO4
@@ -345,10 +350,9 @@ output:
 
 
 light:
-
   - platform: monochromatic
     output: backlight_pin
-    name: "Display Backlight"
+    name: "${NODE} Display Backlight"
     id: back_light
     restore_mode: ALWAYS_ON
 
@@ -359,6 +363,30 @@ light:
     green: output_green
     blue: output_blue
     restore_mode: ALWAYS_OFF
+    effects:
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 0.5s
+          update_interval: 0.5s
+          min_brightness: 0%
+          max_brightness: 100%
+      - strobe:
+          name: "Strobe"
+          colors:
+            - state: true
+              brightness: 100%
+              red: 100%
+              green: 90%
+              blue: 0%
+              duration: 500ms
+            - state: false
+              duration: 250ms
+            - state: true
+              brightness: 100%
+              red: 0%
+              green: 100%
+              blue: 0%
+              duration: 500ms
 
 switch:
   - platform: restart
@@ -368,78 +396,38 @@ sensor:
   - platform: uptime
     id: up
     name: "${NODE} System Uptime"
+    internal: true
     update_interval: 1s
 
   - platform: wifi_signal
     name: "${NODE} WiFi Signal"
     id: wifi_db
-    update_interval: 5s
+    update_interval: 10s
 
   - platform: template
-    name: "Backlight Brightness Value"
+    name: "${NODE} Backlight Brightness"
     id: "brightness_value"
     update_interval: 1s
+    internal: true
     accuracy_decimals: 0
     lambda: |-
-      return (int(id(back_light).current_values.get_brightness() * 100));
+      return (int(id(back_light).current_values.get_brightness() * 255));
 
   - platform: adc
     pin: 34
     name: "${NODE} Light Level"
     id: internal_ldr
-    update_interval: 1s
+    update_interval: 5s
     on_value:
       - lambda: |-
-            float c = float((1.08-x)*(int(id(bright_adjust).state)/100));
+            float a = 1.08 - x;
+            float b = float(id(bright_adjust).state)/100.00;
+            float c = a * b;
+            ESP_LOGI("bright/ldr", "x=%.2f, a=%.2f, b=%.2f, c=%.2f", x, a, b, c);
             brightness_trans(c);
+
+# HA Sensors for Display
             
-#      - above: 1.00
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 5%
-#      - below: 1.0
-#        above: .5
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 10%
-#      - above: .25
-#        below: .5
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 20%
-#      - above: .22
-#        below: .25
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 30%
-#      - below: .22
-#        above: .18
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 40%
-#      - below: .18
-#        above: .14
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 60%
-#      - below: .14
-#        above: .08
-#        then:
-#          - light.turn_on:
-##              id: back_light
-#              brightness: 70%
-#      - below: .08
-#        then:
-#          - light.turn_on:
-#              id: back_light
-#              brightness: 80%
-#
   - platform: homeassistant
     name: "Outside Temperature"
     id: outside_temperature
@@ -490,12 +478,10 @@ sensor:
     id: bedroom_humidity
     entity_id: sensor.sht_humidity
 
-
   - platform: homeassistant
     name: "Kitchen Humidty"
     id: kitchen_humidity
     entity_id: sensor.humidity_158d0001c15683
-
 
   - platform: homeassistant
     name: "PM2.5"
@@ -538,6 +524,17 @@ sensor:
 
 
 text_sensor:
+
+  - platform: wifi_info
+    ip_address:
+       id: wifi_ipaddress
+       name: "${NODE} WiFi IP Address"
+    ssid:
+       id: wifi_ssid
+       name: "${NODE} WiFi SSID"
+    mac_address:
+       id: wifi_mac
+       name: "${NODE} WiFi MAC"
  
   - platform: homeassistant
     name: "OpenWeather Current"
@@ -558,16 +555,6 @@ text_sensor:
     name: "Wind Direction"
     id: wind_direction
     entity_id: sensor.wind_direction
-#    filters:
-#       map:
-#         - NE -> $ICON_COMPASS_NE
-#         - NW -> $ICON_COMPASS_NW
-#         - SE -> $ICON_COMPASS_SE
-#         - SW -> $ICON_COMPASS_SW
-#         - N -> $ICON_COMPASS_N
-#         - E -> $ICON_COMPASS_E
-#         - S -> $ICON_COMPASS_S
-#         - W -> $ICON_COMPASS_W
 
   - platform: homeassistant
     name: "Sunrise"
@@ -587,7 +574,7 @@ binary_sensor:
 
   - platform: touchscreen
     id: bottom_A
-    name: Bottom Left Touch Button
+    name: "${NODE} Touch A"
     x_min: 1
     x_max: 80
     y_min: 200
@@ -598,21 +585,23 @@ binary_sensor:
 
   - platform: touchscreen
     id: bottom_B
-    name: Bottom Center Touch Button
+    name: "${NODE} Touch B"
     x_min: 80 
     x_max: 160
     y_min: 200
     y_max: 339 
+    on_press:
+      - lambda: id(page) = 2;
 
   - platform: touchscreen
     id: bottom_C
-    name: Bottom Right Touch Button
+    name: "${NODE} Touch C"
     x_min: 160
     x_max: 240
     y_min: 200
     y_max: 339
     on_press:
-      - lambda: id(page) = 2;
+      - lambda: id(page) = 3;
 
   - platform: homeassistant
     name: "Warning Bed AQ"
@@ -831,39 +820,64 @@ display:
                            id(aquarium_temperature).state > 26) { color = id(my_orange); }
                         df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
                             "FISH TANK", "%.2f°", color, float(id(aquarium_temperature).state), 
-                                         "%.2fv", Color::WHITE, float(id(internal_ldr).state));
+                                         "", Color::WHITE, 0);
                       }
                       top = top + rowH;
                       df_horizontal_bar(it, top, id(color_lines));
                       break;
 
                  case 2:
+                      break;
+
+                 case 3:
+
+                      rowH = 56;
                       if (id(internal_ldr).has_state()) {
                         df_small_temphum(it, left, top, fullwidth, top + rowH, 
-                            "BACKLIGHT", "%.2fv", Color::WHITE, float(id(internal_ldr).state), 
-                                         "%.0f%%", Color::WHITE, float(id(brightness_value).state));
+                            "LDR ADC", "%.2fv", Color::WHITE, float(id(internal_ldr).state), 
+                                         "", Color::WHITE, float(id(brightness_value).state));
                       }
 
                       if (id(bright_adjust).has_state()) {
                         df_small_temphum(it, col_4b, top, fullwidth, top + rowH, 
-                            "BRIGHT", "%.0f%%", Color::WHITE, float(id(bright_adjust).state), 
-                                         "", Color::WHITE, float(id(brightness_value).state));
-                      }
-                      if (id(internal_ldr).has_state()) {
-                        df_small_temphum(it, col_4c, top, fullwidth, top + rowH, 
-                            "UPTIME", "%.0fm", Color::WHITE, float(int(id(up).state)/60),
-                                      "%.0fs", Color::WHITE, float(int(id(up).state)%60));
+                            "BRIGHTNESS", "%.0f%%", Color::WHITE, float(id(bright_adjust).state), 
+                                         "%.0f", Color::WHITE, float(id(brightness_value).state));
                       }
                       if (id(wifi_db).has_state()) {
                         df_small_temphum(it, col_4d, top, fullwidth, top + rowH, 
-                            "WIFI", "%.0f", Color::WHITE, float(id(wifi_db).state),
-                                      "dBm", Color::WHITE, float(int(id(up).state)%60));
+                            "WIFI dBm", "%.0f", Color::WHITE, float(id(wifi_db).state),
+                                      "", Color::WHITE, float(int(id(up).state)%60));
                       }
                       top = top + rowH;
+
+                      it.print(0, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "NODE NAME");
+                      it.printf(0, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%s", to_string("$NODE").c_str());
+
+                      it.print(fullwidth/2, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "ESPHome VERSION");
+                      it.printf(fullwidth/2, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%s", ESPHOME_VERSION);
+
+                      top = top + 28;
+                      it.print(0, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "WiFi Network");
+                      it.printf(0, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%s", id(wifi_ssid).state.c_str());
+
+                      it.print(fullwidth/2, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "WiFi MAC");
+                      it.printf(fullwidth/2, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%s", id(wifi_mac).state.c_str());
+
+                      top = top + 28;
+                      it.print(0, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "WiFi IP");
+                      it.printf(0, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%s", id(wifi_ipaddress).state.c_str());
+
+                      top = top + 28;
+                      int seconds, hours, minutes;
+                      hours = (int(id(up).state) / 3600) % 24;
+                      minutes = (int(id(up).state) / 60) % 60;
+                      seconds = int(id(up).state) % 60;
+
+                      it.print(0, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "UPTIME");
+                      it.printf(0, top+11, id(font_values_tiny), Color::WHITE, TextAlign::TOP_LEFT, "%d:%02d:%02d", hours, minutes, seconds);
                       break;
 
               } /*end switch*/
-              /*df_display_calibration_data(it, top);*/
 
               /* Bottom Buttons and Alerts */
               rowH = 32; top = it.get_height() - rowH; 
@@ -883,9 +897,10 @@ display:
                   it.print(fullwidth/2, top+4, id(font_values), cfg, TextAlign::TOP_CENTER, message);
               } else {
                   /* Buttons coming soon */
-                  df_button(it, left+1, top, col_3w-1, rowH, "HOME");
-                  /*(col_3b+1, top, col_3w-1, rowH, id(button_bg));*/
-                  df_button(it, col_3c+1, top, col_3w-1, rowH, "SYSTEM");
+                  df_button(it, left+1, top, col_3w-1, rowH, "WEATHER",   int(id(page)) == 1);
+                  df_button(it, col_3b+1, top, col_3w-1, rowH, "CONTROL", int(id(page)) == 2);
+                  df_button(it, col_3c+1, top, col_3w-1, rowH, "SYSTEM",  int(id(page)) == 3);
               }
+              /*df_display_calibration_data(it, top);*/
         }
 
