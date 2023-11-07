@@ -187,6 +187,8 @@ substitutions:
   ICON_WATER:            "\U000F058C"
   ICON_GAUGE:            "\U000F029A"
 
+  ICON_LIGHTBULB_ON:     "\U000F06E8"
+
 number:
   - platform: template
     name: "${NODE} Brightness Adjustment"
@@ -279,6 +281,7 @@ font:
       - $ICON_ALERT
       - $ICON_WX_WINDY
       - $ICON_WX_WINDY_X
+      - $ICON_LIGHTBULB_ON
 
 
   - file: "fonts/mdi.ttf"
@@ -387,6 +390,7 @@ light:
               green: 100%
               blue: 0%
               duration: 500ms
+
 
 switch:
   - platform: restart
@@ -566,6 +570,10 @@ text_sensor:
     id: sunset
     entity_id: sensor.nextsunset
 
+  - platform: homeassistant
+    entity_id: light.lounge_light
+    id: light_lounge
+
 binary_sensor:
 
   - platform: status
@@ -634,6 +642,7 @@ display:
        static int col_3b = col_3w;
        static int col_3c = (col_3w * 2);
        auto ic = Color::WHITE;
+       auto lbon = Color::WHITE, lboff = Color::WHITE, lb = Color::WHITE;
 
 
        FONT_TITLE = id(font_title);
@@ -824,9 +833,18 @@ display:
                       }
                       top = top + rowH;
                       df_horizontal_bar(it, top, id(color_lines));
+
                       break;
 
                  case 2:
+                      lboff = id(my_grey);
+                      lbon = id(my_orange);
+                      lb = id(my_grey);
+
+                      if(id(light_lounge).state == "on") { lb = lbon; } else { lb = lboff; }
+                      it.print(0, top, id(font_labels), id(color_labels), TextAlign::TOP_LEFT, "LOUNGE LIGHT");
+                      it.printf(0, top+11, id(font_mdi_large), lb, TextAlign::TOP_LEFT, "%s", to_string("$ICON_LIGHTBULB_ON").c_str());
+
                       break;
 
                  case 3:
