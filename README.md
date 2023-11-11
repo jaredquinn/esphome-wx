@@ -2,8 +2,8 @@
 
 ![Made for ESPhome](https://esphome.io/_images/made-for-esphome-black-on-white.svg)
 
-More information on my full weather station setup can be found in the related folder,
-a good starting point is the [background document](related/background.md).
+More information on my full weather station setup can be found in the [docs](docs) folder,
+a good starting point is the [background document](docs/background.md).
 
 As more devices are being added to the supported devices, the structure of this repository
 has recently undergone some changes.   Common configuration and repeated code is being
@@ -38,7 +38,7 @@ substitutions:
 I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
 board as an easy way to deploy a second WX screen to the smart house.
 
-See [all-in-one](related/all-in-one.md) for an ESPhome configuration and pin details.
+See [ESP32-2432S028](docs/esp32-2432s028.md) for more information on this device.
 
 This device also contains an LDR for display brightness adjustment, for this you can define an adjustment value, 
 the voltage range and utilise auto\_dim.h.
@@ -51,6 +51,8 @@ The full ESPhome configuration, as used by my coffee table unit can be found at 
 
 Another new addition to my devkit collection is the ESP32-2424S012, using a different TFT and touchscreen 
 controller than the above board.
+
+See [ESP32-2424S012](docs/esp32-2424s12.md) for more information on this device.
 
 **Support of this device is a work in progress.**
 
