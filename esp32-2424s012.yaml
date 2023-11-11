@@ -69,7 +69,6 @@ display:
 - platform: gc9a01
   cs_pin: GPIO10
   dc_pin: GPIO2
-  #rotation: 180
   update_interval: 50ms
   lambda: |-
      it.strftime(120, 120,  id(font_clock), id(color_clock), TextAlign::CENTER, "%H:%M", id(nettime).now());
