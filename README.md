@@ -55,7 +55,7 @@ The full ESPhome configuration, as used by my coffee table unit can be found at 
 Another new addition to my devkit collection is the ESP32-2424S012, using a different TFT and touchscreen 
 controller than the above board.
 
-See [ESP32-2424S012](docs/esp32-2424s12.md) for more information on this device.
+See [ESP32-2424S012](docs/esp32-2424s012.md) for more information on this device.
 
 **Support of this device is a work in progress.**
 
