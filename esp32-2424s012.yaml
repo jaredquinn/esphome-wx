@@ -1,0 +1,80 @@
+
+substitutions:
+  NODE: "Kitchen Display"
+  TEXT_TITLE: "CatsLair"
+  <<: !include packages/fonts_subs.yaml
+
+<<: !include common_network.yaml
+
+packages:
+  ha: !include packages/ha_sensors.yaml
+  internal: !include packages/internal_sensors.yaml
+  fonts: !include packages/fonts.yaml
+
+esphome:
+  name: screenkitchen
+
+# This device is a ESP32-C3 RISC-V based MCU.
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: arduino
+
+# See README.md the components directory, this is a modified version
+# of a previous ESPhome PR
+external_components:
+  - source: components
+    components: ["gc9a01"]
+
+
+logger:
+  level: DEBUG
+
+# Touchscreen is on an I2C device, supporting coming soon?!?
+i2c:
+ - sda: GPIO4
+   scl: GPIO5
+   scan: true
+   id: bus_a
+
+
+spi:
+  mosi_pin: GPIO7
+  miso_pin: GPIO2
+  clk_pin: GPIO6
+
+output:
+  - platform: ledc
+    pin: GPIO3
+    id: backlight_pin
+
+light:
+  - platform: monochromatic
+    output: backlight_pin
+    name: "${NODE} Display Backlight"
+    id: back_light
+    restore_mode: ALWAYS_ON
+
+# Touchscreen support is a work in progress on this device
+# See the readme for more information
+
+#touchscreen:
+#  platform: cst816s
+#  interrupt_pin: GPIO0
+#  reset_pin: GPIO1
+
+
+display:
+- platform: gc9a01
+  cs_pin: GPIO10
+  dc_pin: GPIO2
+  #rotation: 180
+  update_interval: 50ms
+  lambda: |-
+     it.strftime(120, 120,  id(font_clock), id(color_clock), TextAlign::CENTER, "%H:%M", id(nettime).now());
+     if(id(nettime).now().second % 2 == 0) {
+       it.print(120, 120, id(font_clock), Color::BLACK, TextAlign::CENTER, ":");
+     }
+
+

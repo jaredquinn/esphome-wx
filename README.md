@@ -5,7 +5,35 @@
 More information on my full weather station setup can be found in the related folder,
 a good starting point is the [background document](related/background.md).
 
+As more devices are being added to the supported devices, the structure of this repository
+has recently undergone some changes.   Common configuration and repeated code is being
+migrated to includes and packages where appropriate.
+
+The configurations here expect all network, api, web and portal configuration to be found
+in an include file named **common_network.yaml** in the same directory.
+
+Additionally the following packages are now included in this repository:
+
+* `packages/ha_sensors.yaml` - sensors used by demo code from Home Assistant
+* `packages/internal_sensors.yaml` - internal sensors (uptime, wifi signal)
+* `packages/fonts.yaml` - common fonts, colours and characters
+
+The packages/fonts.yaml file utilises substitutions to abstract the unicode needed, these 
+substitutions can be included along with your top level substitutions using an inline include:
+
+e.g:
+```
+substitutions:
+  NODE: "Kitchen Display"
+  TEXT_TITLE: "CatsLair"
+  <<: !include packages/fonts_subs.yaml
+
+```
+
+
 # Buying a ready made display
+
+## ESP32-2432S028
 
 I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
 board as an easy way to deploy a second WX screen to the smart house.
@@ -16,6 +44,18 @@ This device also contains an LDR for display brightness adjustment, for this you
 the voltage range and utilise auto\_dim.h.
 
 The full ESPhome configuration, as used by my coffee table unit can be found at [esp32-2432s028.yaml](esp32-2432s028.yaml).
+
+**This device is now fully supported by this code.**
+
+## ESP32-2424S012
+
+Another new addition to my devkit collection is the ESP32-2424S012, using a different TFT and touchscreen 
+controller than the above board.
+
+**Support of this device is a work in progress.**
+
+* Touch screen is not currently working.
+* Display is working, using a component that is included in this repository.
 
 
 # Building the display
@@ -115,8 +155,7 @@ esphome:
   - display_functions.h
 ```
 
-Create all the required sensors for the display based on the table above.  You can find a reference
-in example-sensors.yaml.
+All sensors used in the demo code can be found in the packages/ha_sensors.yaml and packages/internal.yaml files.
 
 Download the fonts used in my example; it expects to find them in the fonts/ directory:
 

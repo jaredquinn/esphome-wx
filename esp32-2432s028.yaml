@@ -1,4 +1,16 @@
 
+substitutions:
+  NODE: "Kitchen Display"
+  TEXT_TITLE: "CatsLair"
+  <<: !include packages/fonts_subs.yaml
+
+<<: !include common_network.yaml
+
+packages:
+  ha: !include packages/ha_sensors.yaml
+  internal: !include packages/internal_sensors.yaml
+  fonts: !include packages/fonts.yaml
+
 esphome:
   name: screen2
   includes:
@@ -19,23 +31,6 @@ esp32:
 logger:
   level: INFO
   
-# Enable Home Assistant API
-api:
-  password: ""
-
-ota:
-  password: ""
-
-wifi:
-  ssid: !secret WIFI_SSID
-  password: !secret WIFI_PSK
-  fast_connect: true
-
-web_server:
-  port: 80
-
-captive_portal:
-
 globals:
    - id: page
      type: int
@@ -75,120 +70,6 @@ i2c:
      scan: true
      id: bus_a
 
-time:
-  - platform: homeassistant
-    id: nettime
-
-color:
-  - id: color_lines
-    red: 20%
-    blue: 20%
-    green: 20%
-  - id: button_bg
-    blue: 80%
-    red: 30%
-    green: 30%
-  - id: bar_bg
-    blue: 100%
-    red: 0%
-    green: 0%
-  - id: color_labels
-    red: 60%
-    blue: 60%
-    green: 60%
-  - id: color_clock
-    red: 100%
-    blue: 20%
-    green: 20%
-  - id: my_blue
-    red: 0%
-    green: 0%
-    blue: 100%
-  - id: my_red
-    red: 100%
-    green: 0%
-    blue: 0%
-  - id: my_grey
-    red: 60%
-    blue: 60%
-    green: 60%
-  - id: my_yellow
-    red: 100%
-    green: 100%
-    blue: 0%
-  - id: my_green
-    red: 0%
-    green: 100%
-    blue: 0%
-  - id: my_orange
-    red: 100%
-    green: 50%
-    blue: 0%
-  - id: my_darkblue
-    red: 20%
-    green: 20%
-    blue: 75%
-    
-
-substitutions:
-  NODE: "Coffee Table"
-  TEXT_TITLE: "CatsLair"
-
-  ICON_COMPASS_W:        "\U000F1593"    
-  ICON_COMPASS_NW:       "\U000F1594"
-  ICON_COMPASS_SE:       "\U000F1595"
-  ICON_COMPASS_SW:       "\U000F1596"
-  ICON_COMPASS_N:        "\U000F1597"
-  ICON_COMPASS_NE:       "\U000F1598"
-  ICON_COMPASS_S:        "\U000F1599"
-  ICON_COMPASS_E:        "\U000F159A"
-
-  ICON_ALERT:            "\U000F0005"
-
-  ICON_WX_CLOUDY:        "\U000F0590"
-  ICON_WX_FOG:           "\U000F0591"
-  ICON_WX_HAIL:          "\U000F0592"
-  ICON_WX_LIGHTNING:     "\U000F0593"
-  ICON_WX_NIGHT:         "\U000F0594"
-  ICON_WX_PART_CLOUD:    "\U000F0595"
-  ICON_WX_POURING:       "\U000F0596"
-  ICON_WX_RAINY:         "\U000F0597"
-  ICON_WX_SNOWY:         "\U000F0598"
-  ICON_WX_SUNNY:         "\U000F0599"
-  ICON_WX_WINDY:         "\U000F059D"
-  ICON_WX_WINDY_X:       "\U000F059E"
-
-  ICON_WX_CLOUDY_X:      "\U000F0F2F" # Cloudy Alert
-  ICON_WX_SUNNY_X:       "\U000F0F37" # Sunny Alert
-  ICON_WX_CLOUDY_AR:     "\U000F0E6E" # Cloud Arrow Right
-  ICON_WX_HURRICANE:     "\U000F0898"
-  ICON_WX_LNING_RAIN:    "\U000F067E"
-  ICON_WX_HAZY:          "\U000F0F30"
-  ICON_WX_NIGHT_PART:    "\U000F0F31"
-  ICON_WX_PART_LNING:    "\U000F0F32"
-  ICON_WX_PART_RAIN:     "\U000F0F33"
-  ICON_WX_PART_SNOW:     "\U000F0F34"
-  ICON_WX_PART_SNOWRAIN: "\U000F0F35"
-  ICON_WX_SNOW_HEAVY:    "\U000F0F36"
-  ICON_WX_SNOWRAIN:      "\U000F067F"
-  ICON_WX_SUNNY_OFF:     "\U000F14E4"
-
-  ICON_MOON_1ST_QTR:     "\U000F0F61"
-  ICON_MOON_FULL:        "\U000F0F62"
-  ICON_MOON_LAST_QTR:    "\U000F0F63"
-  ICON_MOON_NEW:         "\U000F0F64"
-  ICON_MOON_WAN_CRES:    "\U000F0F65"
-  ICON_MOON_WAN_GIB:     "\U000F0F66"
-  ICON_MOON_WAX_CRES:    "\U000F0F67"
-  ICON_MOON_WAX_GIB:     "\U000F0F68"
-
-  ICON_SUNSET:           "\U000F059A"
-  ICON_CUP_WATER:        "\U000F01AA"
-  ICON_WATER:            "\U000F058C"
-  ICON_GAUGE:            "\U000F029A"
-
-  ICON_LIGHTBULB_ON:     "\U000F06E8"
-
 number:
   - platform: template
     name: "${NODE} Brightness Adjustment"
@@ -205,101 +86,6 @@ number:
             float c = a * b;
             ESP_LOGI("bright/adjust", "x=%.2f, a=%.2f, b=%.2f, c=%.2f", x, a, b, c);
             brightness_trans(c);
-
-font:
-
-  - file: "fonts/alarm-clock.ttf"
-    id: font_clock
-    size: 48
-    glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ' ]
-
-  - file: "fonts/arial.ttf"
-    id: font_values_big
-    size: 24
-
-  - file: "fonts/arial.ttf"
-    id: font_labels
-    size: 9
-
-  - file: "fonts/arial.ttf"
-    id: font_values
-    size: 20
-
-  - file: "fonts/arial.ttf"
-    id: font_values_small
-    size: 18
-
-  - file: "fonts/arial.ttf"
-    id: font_values_tiny
-    size: 12
-
-  - file: "fonts/futura.ttf"
-    id: font_title
-    size: 12
-
-  - file: "fonts/mdi.ttf"
-    id: font_compass
-    size: 26
-    glyphs:
-      - $ICON_COMPASS_N
-      - $ICON_COMPASS_NE
-      - $ICON_COMPASS_E
-      - $ICON_COMPASS_SE
-      - $ICON_COMPASS_S
-      - $ICON_COMPASS_SW
-      - $ICON_COMPASS_W
-      - $ICON_COMPASS_NW
-
-  - file: "fonts/mdi.ttf"
-    id: font_mdi_large
-    size: 44
-    glyphs:
-      - $ICON_WX_CLOUDY
-      - $ICON_WX_FOG
-      - $ICON_WX_HAIL
-      - $ICON_WX_LIGHTNING
-      - $ICON_WX_NIGHT
-      - $ICON_WX_PART_CLOUD
-      - $ICON_WX_POURING
-      - $ICON_WX_RAINY
-      - $ICON_WX_SNOWY
-      - $ICON_WX_SUNNY
-      - $ICON_WX_CLOUDY_X
-      - $ICON_WX_SUNNY_X
-      - $ICON_WX_CLOUDY_AR
-      - $ICON_WX_HURRICANE
-      - $ICON_WX_LNING_RAIN
-      - $ICON_WX_HAZY
-      - $ICON_WX_NIGHT_PART
-      - $ICON_WX_PART_LNING
-      - $ICON_WX_PART_RAIN
-      - $ICON_WX_PART_SNOW
-      - $ICON_WX_PART_SNOWRAIN
-      - $ICON_WX_SNOW_HEAVY
-      - $ICON_WX_SNOWRAIN
-      - $ICON_WX_SUNNY_OFF
-      - $ICON_ALERT
-      - $ICON_WX_WINDY
-      - $ICON_WX_WINDY_X
-      - $ICON_LIGHTBULB_ON
-
-
-  - file: "fonts/mdi.ttf"
-    id: font_mdi
-    size: 20
-    glyphs:
-      - $ICON_MOON_1ST_QTR
-      - $ICON_MOON_FULL
-      - $ICON_MOON_LAST_QTR
-      - $ICON_MOON_NEW
-      - $ICON_MOON_WAN_CRES
-      - $ICON_MOON_WAN_GIB
-      - $ICON_MOON_WAX_CRES
-      - $ICON_MOON_WAX_GIB
-      - $ICON_SUNSET
-      - $ICON_WATER
-      - $ICON_CUP_WATER
-      - $ICON_GAUGE
 
 touchscreen:
   platform: xpt2046
@@ -391,22 +177,7 @@ light:
               blue: 0%
               duration: 500ms
 
-
-switch:
-  - platform: restart
-    name: "${NODE} ESP32 Restart"
-
 sensor:
-  - platform: uptime
-    id: up
-    name: "${NODE} System Uptime"
-    internal: true
-    update_interval: 1s
-
-  - platform: wifi_signal
-    name: "${NODE} WiFi Signal"
-    id: wifi_db
-    update_interval: 10s
 
   - platform: template
     name: "${NODE} Backlight Brightness"
@@ -430,155 +201,8 @@ sensor:
             ESP_LOGI("bright/ldr", "x=%.2f, a=%.2f, b=%.2f, c=%.2f", x, a, b, c);
             brightness_trans(c);
 
-# HA Sensors for Display
-            
-  - platform: homeassistant
-    name: "Outside Temperature"
-    id: outside_temperature
-    entity_id: sensor.balcony_temperature
-
-  - platform: homeassistant
-    name: "Outside Humidty"
-    id: outside_humidity
-    entity_id: sensor.balcony_humidity
-
-  - platform: homeassistant
-    name: "Inside Humidity"
-    id: inside_humidity
-    entity_id: sensor.mi_air_purifier_3_3h_humidity
-
-  - platform: homeassistant
-    name: "Inside Temperature"
-    id: inside_temperature
-    entity_id: sensor.mi_air_purifier_3_3h_temperature
-
-  - platform: homeassistant
-    name: "Kitchen Temperature"
-    id: kitchen_temperature
-    entity_id: sensor.temperature_158d0001c15683
-
-  - platform: homeassistant
-    name: "Bedroom Temperature"
-    id: bedroom_temperature 
-    entity_id: sensor.sht_temperature
-
-  - platform: homeassistant
-    name: "Aquarium Temperature"
-    id: aquarium_temperature 
-    entity_id: sensor.aquarium_temperature
-
-  - platform: homeassistant
-    name: "Bathroom Temperature"
-    id: bathroom_temperature 
-    entity_id: sensor.temperature_158d000222631e
-
-  - platform: homeassistant
-    name: "Bathroom Humidity"
-    id: bathroom_humidity
-    entity_id: sensor.humidity_158d000222631e
-
-  - platform: homeassistant
-    name: "Bedroom Humidity"
-    id: bedroom_humidity
-    entity_id: sensor.sht_humidity
-
-  - platform: homeassistant
-    name: "Kitchen Humidty"
-    id: kitchen_humidity
-    entity_id: sensor.humidity_158d0001c15683
-
-  - platform: homeassistant
-    name: "PM2.5"
-    id: pm2_5
-    entity_id: sensor.mi_air_purifier_3_3h_pm2_5
-
-  - platform: homeassistant
-    name: "TVOC"
-    id: tvoc
-    entity_id: sensor.tvoc
-
-  - platform: homeassistant
-    name: "eCO²"
-    id: eco2
-    entity_id: sensor.eco2
-
-  - platform: homeassistant
-    name: "Wind Speed"
-    id: wind_speed
-    entity_id: sensor.balcony_windspeed
-
-  - platform: homeassistant
-    name: "Rain Today"
-    id: rain_hr
-    entity_id: sensor.rain_last_hour
-    filters:
-      - multiply: 10
-
-  - platform: homeassistant
-    name: "Rain Today"
-    id: rain_today
-    entity_id: sensor.rain_today
-    filters:
-      - multiply: 10
-
-  - platform: homeassistant
-    name: "Batrometric Pressure"
-    id: barometric_pressure
-    entity_id: sensor.barometric_pressure
-
-
-text_sensor:
-
-  - platform: wifi_info
-    ip_address:
-       id: wifi_ipaddress
-       name: "${NODE} WiFi IP Address"
-    ssid:
-       id: wifi_ssid
-       name: "${NODE} WiFi SSID"
-    mac_address:
-       id: wifi_mac
-       name: "${NODE} WiFi MAC"
- 
-  - platform: homeassistant
-    name: "OpenWeather Current"
-    id: weather_condition
-    entity_id: sensor.openweathermap_condition
-
-  - platform: homeassistant
-    name: "OpenWeather"
-    id: forecast
-    entity_id: sensor.forecast_2
-
-  - platform: homeassistant
-    name: "moon"
-    id: moon
-    entity_id: sensor.moon
-
-  - platform: homeassistant
-    name: "Wind Direction"
-    id: wind_direction
-    entity_id: sensor.wind_direction
-
-  - platform: homeassistant
-    name: "Sunrise"
-    id: sunrise
-    entity_id: sensor.nextsunrise
-
-  - platform: homeassistant
-    name: "Sunset"
-    id: sunset
-    entity_id: sensor.nextsunset
-
-  - platform: homeassistant
-    entity_id: light.lounge_light
-    id: light_lounge
 
 binary_sensor:
-
-  - platform: status
-    name: "${NODE} Node Status"
-    id: system_status
 
   - platform: touchscreen
     id: bottom_A
@@ -610,17 +234,6 @@ binary_sensor:
     y_max: 339
     on_press:
       - lambda: id(page) = 3;
-
-  - platform: homeassistant
-    name: "Warning Bed AQ"
-    id: warn_bed_aq
-    entity_id: input_boolean.warn_bed_aq
-
-  - platform: homeassistant
-    name: "Warning Fish Temp"
-    id: warn_fish
-    entity_id: input_boolean.warn_fish
-
 
 display:
   - platform: ili9xxx
