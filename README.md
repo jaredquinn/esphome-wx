@@ -34,6 +34,7 @@ substitutions:
 # Buying a ready made display
 
 ## ESP32-2432S028
+![ESP32-2432S028](docs/image/esp32-2432s028.jpeg)
 
 I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
 board as an easy way to deploy a second WX screen to the smart house.
@@ -48,6 +49,8 @@ The full ESPhome configuration, as used by my coffee table unit can be found at 
 **This device is now fully supported by this code.**
 
 ## ESP32-2424S012
+
+![ESP32-2424S012](docs/image/esp32-2424s012.jpeg)
 
 Another new addition to my devkit collection is the ESP32-2424S012, using a different TFT and touchscreen 
 controller than the above board.
