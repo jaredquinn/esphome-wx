@@ -8,9 +8,12 @@ esphome::display::BaseFont* FONT_LABELS;
 esphome::display::BaseFont* FONT_MDI;
 esphome::display::BaseFont* FONT_COMPASS;
 
-void df_button(esphome::display::Display &lcd, int left, int top, int width, int height, const char* text) {
-  lcd.filled_rectangle(left, top, width, height, id(button_bg));
-  lcd.printf(left+int(width/2), top+int(height/2), FONT_LABELS, Color::WHITE, TextAlign::CENTER, "%s", text);
+void df_button(esphome::display::Display &lcd, int left, int top, int width, int height, const char* text, bool state) {
+  auto bg = id(button_bg);
+  auto fg = Color::WHITE;
+  if(state) { fg = id(button_bg); bg = Color::BLACK; }
+  lcd.filled_rectangle(left, top, width, height, bg);
+  lcd.printf(left+int(width/2), top+int(height/2), FONT_LABELS, fg, TextAlign::CENTER, "%s", text);
 }
 void df_horizontal_bar(esphome::display::Display &lcd, int top, esphome::Color lineColor) {
   lcd.line(0, top, lcd.get_width(), top, lineColor);

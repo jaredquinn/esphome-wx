@@ -1,7 +1,5 @@
 # ESPHome Weather Display
 
-![Made for ESPhome](https://esphome.io/_images/made-for-esphome-black-on-white.svg)
-
 More information on my full weather station setup can be found in the [docs](docs) folder,
 a good starting point is the [background document](docs/background.md).
 

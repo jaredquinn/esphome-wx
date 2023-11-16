@@ -7,3 +7,11 @@ void brightness_trans(float c) {
    call.set_brightness(c);
    call.perform();
 }
+
+void change_adc(float a) {
+   float b = float(id(bright_adjust).state)/100.00;
+   float c = a * b;
+   ESP_LOGI("bright/ldr", "a=%.2f, b=%.2f, c=%.2f", a, b, c);
+   brightness_trans(c);
+}
+
