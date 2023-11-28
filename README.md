@@ -32,7 +32,7 @@ substitutions:
 # Buying a ready made display
 
 ## ESP32-2432S028
-![ESP32-2432S028](docs/image/esp32-2432s028.jpeg)
+![ESP32-2432S028](docs/image/esp32-2432s028-front.jpeg)
 
 I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
 board as an easy way to deploy a second WX screen to the smart house.
