@@ -1,12 +1,18 @@
 font:
   - file: "fonts/alarm-clock.ttf"
     id: font_clock
-    size: ${CLOCK_SIZE}
+    size: ${FONT_SIZE_CLOCK}
+    glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ' ]
+
+  - file: "fonts/arial.ttf"
+    id: font_very_big
+    size: ${FONT_SIZE_CLOCK}
     glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ' ]
 
   - file: "fonts/arial.ttf"
     id: font_values_big
-    size: 24
+    #size: 24
+    size: ${FONT_SIZE_BIG}
 
   - file: "fonts/arial.ttf"
     id: font_labels
@@ -30,7 +36,7 @@ font:
 
   - file: "fonts/mdi.ttf"
     id: font_compass
-    size: 26
+    size: ${FONT_SIZE_BIG}
     glyphs:
       - $ICON_COMPASS_N
       - $ICON_COMPASS_NE
@@ -40,10 +46,15 @@ font:
       - $ICON_COMPASS_SW
       - $ICON_COMPASS_W
       - $ICON_COMPASS_NW
+      - $ICON_THERMOMETER
+      - $ICON_FISH
+      - $ICON_GAUGE
+
 
   - file: "fonts/mdi.ttf"
     id: font_mdi_large
-    size: 44
+    #size: 44
+    size: ${FONT_SIZE_ICONS}
     glyphs:
       - $ICON_WX_CLOUDY
       - $ICON_WX_FOG
