@@ -2,6 +2,9 @@
 substitutions:
   NODE: "Kitchen Display"
   TEXT_TITLE: "CatsLair"
+  FONT_SIZE_CLOCK: "48"
+  FONT_SIZE_BIG: "26"
+  FONT_SIZE_ICONS: "44"
   <<: !include packages/fonts_subs.yaml
 
 <<: !include common_network.yaml
