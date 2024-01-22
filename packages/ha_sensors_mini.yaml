@@ -1,0 +1,42 @@
+
+time:
+  - platform: homeassistant
+    id: nettime
+
+sensor:
+  - platform: homeassistant
+    name: "Outside Temperature"
+    id: outside_temperature
+    entity_id: sensor.balcony_temperature
+
+  - platform: homeassistant
+    name: "Outside Humidty"
+    id: outside_humidity
+    entity_id: sensor.balcony_humidity
+
+  - platform: homeassistant
+    name: "Inside Humidity"
+    id: inside_humidity
+    entity_id: sensor.mi_air_purifier_3_3h_humidity
+
+  - platform: homeassistant
+    name: "Inside Temperature"
+    id: inside_temperature
+    entity_id: sensor.mi_air_purifier_3_3h_temperature
+
+  - platform: homeassistant
+    name: "Aquarium Temperature"
+    id: aquarium_temperature 
+    entity_id: sensor.aquarium_temperature
+
+  - platform: homeassistant
+    name: "Batrometric Pressure"
+    id: barometric_pressure
+    entity_id: sensor.barometric_pressure
+
+binary_sensor:
+
+  - platform: homeassistant
+    name: "Warning Fish Temp"
+    id: warn_fish
+    entity_id: input_boolean.warn_fish
