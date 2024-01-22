@@ -144,6 +144,9 @@ display:
 Current conditions coded in the wx.yaml lambda function for the display convert OpenWeatherMap current conditions to a Material Iconset icon.
 This can easily be adapted for other current conditions reporting.
 
+This list changes over time with changes to my environment; refer to the current packages/ha\_sensors.yaml file for the latest definitions
+used in my sample code.
+
 
 # Get Started
 
