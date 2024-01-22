@@ -1,0 +1,27 @@
+sensor:
+  - platform: template
+    name: "${NODE} Backlight Brightness"
+    id: "brightness_value"
+    update_interval: 1s
+    internal: true
+    accuracy_decimals: 0
+    lambda: |-
+      return (int(id(back_light).current_values.get_brightness() * 255));
+
+number:
+  - platform: template
+    name: "${NODE} Brightness Adjustment"
+    id: bright_adjust
+    optimistic: true
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    on_value:
+      - lambda: |-
+            float a = 1.08 - id(internal_ldr).state;
+            float b = float(x/100);
+            float c = a * b;
+            ESP_LOGI("bright/adjust", "x=%.2f, a=%.2f, b=%.2f, c=%.2f", x, a, b, c);
+            brightness_trans(c);
+
