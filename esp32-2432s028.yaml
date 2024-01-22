@@ -6,9 +6,9 @@ substitutions:
   FONT_SIZE_ICONS: "44"
   FONT_SIZE_BIG: "26"
   FONT_SIZE_TINY: "14"
-  <<: !include packages/fonts_subs.yaml
+  <<: !include includes/fonts_subs.yaml
 
-<<: !include common_network.yaml
+<<: !include includes/common_network.yaml
 
 packages:
   ha: !include packages/ha_sensors.yaml

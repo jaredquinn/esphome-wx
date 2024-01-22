@@ -25,15 +25,6 @@ void df_boot_screen(esphome::display::Display &lcd) {
   lcd.print(center, 160, FONT_VALUE, TextAlign::TOP_CENTER, "Waiting for Connection");
 }
 
-void df_display_calibration_data(esphome::display::Display &lcd, int top) {
-  int colwidth=lcd.get_width()/4;
-  lcd.printf(0, top, FONT_LABELS, TextAlign::TOP_LEFT, "x=%d", id(lastX));
-  lcd.printf(colwidth*1, top, FONT_LABELS, TextAlign::TOP_LEFT, "y=%d", id(lastY));
-  lcd.printf(colwidth*2, top, FONT_LABELS, TextAlign::TOP_LEFT, "rx=%d", id(lastXraw));
-  lcd.printf(colwidth*3, top, FONT_LABELS, TextAlign::TOP_LEFT, "ry=%d", id(lastYraw));
-  lcd.filled_rectangle(id(lastX), id(lastY), 5, 5, id(my_red));
-}
-
 void df_top_bar(esphome::display::Display &lcd, const char *text)
 {
   lcd.filled_rectangle(0, 0, lcd.get_width(), 24, id(bar_bg));
