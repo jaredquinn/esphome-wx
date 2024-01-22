@@ -24,10 +24,14 @@ e.g:
 substitutions:
   NODE: "Kitchen Display"
   TEXT_TITLE: "CatsLair"
+  FONT_SIZE_CLOCK: "52"
+  FONT_SIZE_BIG: "30"
+  FONT_SIZE_ICONS: "60"
   <<: !include packages/fonts_subs.yaml
 
 ```
-
+These fonts substitutions require some font sizes to be defined in substitutions to allow
+easy transfer between different density displays demonstrated here.
 
 # Buying a ready made display
 
