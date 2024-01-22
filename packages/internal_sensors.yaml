@@ -8,12 +8,12 @@ sensor:
     id: up
     name: "${NODE} System Uptime"
     internal: true
-    update_interval: 1s
+    update_interval: 60s
 
   - platform: wifi_signal
     name: "${NODE} WiFi Signal"
     id: wifi_db
-    update_interval: 10s
+    update_interval: 60s
 
 
 text_sensor:
@@ -27,17 +27,12 @@ text_sensor:
     mac_address:
        id: wifi_mac
        name: "${NODE} WiFi MAC"
+
+#  - platform: homeassistant
+#    name: "OpenWeather"
+#    id: forecast
+#    entity_id: sensor.forecast_2
  
-  - platform: homeassistant
-    name: "OpenWeather Current"
-    id: weather_condition
-    entity_id: sensor.openweathermap_condition
-
-  - platform: homeassistant
-    name: "OpenWeather"
-    id: forecast
-    entity_id: sensor.forecast_2
-
 binary_sensor:
 
   - platform: status

@@ -11,10 +11,10 @@ substitutions:
 <<: !include includes/common_network.yaml
 
 packages:
-  ha: !include packages/ha_sensors.yaml
-  internal: !include packages/internal_sensors.yaml
-  fonts: !include packages/fonts.yaml
-  dimmer: !include packages/auto_dim.yaml
+  ha: github://jaredquinn/esphome-wx/packages/ha_sensors.yaml
+  internal: github://jaredquinn/esphome-wx/packages/internal_sensors.yaml
+  fonts: github://jaredquinn/esphome-wx/packages/fonts.yaml
+  dimmer: github://jaredquinn/esphome-wx/packages/auto_dim.yaml
 
 esphome:
   name: screen2
