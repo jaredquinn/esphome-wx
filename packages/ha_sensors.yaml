@@ -27,12 +27,12 @@ sensor:
   - platform: homeassistant
     name: "Kitchen Temperature"
     id: kitchen_temperature
-    entity_id: sensor.temperature_158d0001c15683
+    entity_id: sensor.kitchen_env_temperature
 
   - platform: homeassistant
     name: "Bedroom Temperature"
     id: bedroom_temperature 
-    entity_id: sensor.sht_temperature
+    entity_id: sensor.bedroom_sht_temperature
 
   - platform: homeassistant
     name: "Aquarium Temperature"
@@ -42,22 +42,22 @@ sensor:
   - platform: homeassistant
     name: "Bathroom Temperature"
     id: bathroom_temperature 
-    entity_id: sensor.temperature_158d000222631e
+    entity_id: sensor.bathroom_env_temperature
 
   - platform: homeassistant
     name: "Bathroom Humidity"
     id: bathroom_humidity
-    entity_id: sensor.humidity_158d000222631e
+    entity_id: sensor.bathroom_env_humidity
 
   - platform: homeassistant
     name: "Bedroom Humidity"
     id: bedroom_humidity
-    entity_id: sensor.sht_humidity
+    entity_id: sensor.bedroom_sht_humidity
 
   - platform: homeassistant
     name: "Kitchen Humidty"
     id: kitchen_humidity
-    entity_id: sensor.humidity_158d0001c15683
+    entity_id: sensor.kitchen_env_humidity
 
   - platform: homeassistant
     name: "PM2.5"
@@ -67,12 +67,12 @@ sensor:
   - platform: homeassistant
     name: "TVOC"
     id: tvoc
-    entity_id: sensor.tvoc
+    entity_id: sensor.bedroom_tvoc
 
   - platform: homeassistant
     name: "eCO²"
     id: eco2
-    entity_id: sensor.eco2
+    entity_id: sensor.bedroom_eco2
 
   - platform: homeassistant
     name: "Wind Speed"
@@ -94,9 +94,16 @@ sensor:
       - multiply: 10
 
   - platform: homeassistant
+    name: "Rain Rate"
+    id: rain_rate
+    entity_id: sensor.rain_rate
+    filters:
+      - multiply: 10
+
+  - platform: homeassistant
     name: "Batrometric Pressure"
     id: barometric_pressure
-    entity_id: sensor.barometric_pressure
+    entity_id: sensor.bedroom_bme280_pressure
 
 text_sensor:
 
@@ -123,6 +130,16 @@ text_sensor:
   - platform: homeassistant
     entity_id: light.lounge_light
     id: light_lounge
+
+  - platform: homeassistant
+    name: "OpenWeather Current"
+    id: weather_condition
+    entity_id: sensor.openweathermap_condition
+
+  - platform: homeassistant
+    name: "OpenWeather"
+    id: forecast
+    entity_id: sensor.forecast_2
 
 binary_sensor:
 
