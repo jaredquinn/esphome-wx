@@ -62,7 +62,7 @@ See [ESP32-2424S012](docs/esp32-2424s012.md) for more information on this device
 **Support of this device is a work in progress.**
 
 * Touch screen is not currently working.
-* Display is working, using a component that is included in this repository.
+* Display is working, using a component that is included in this repository (forked and maintained for latest esphome).
 
 
 # Building the display
