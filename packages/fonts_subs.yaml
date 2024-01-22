@@ -22,6 +22,7 @@ ICON_WX_SUNNY:         "\U000F0599"
 ICON_WX_WINDY:         "\U000F059D"
 ICON_WX_WINDY_X:       "\U000F059E"
 
+
 ICON_WX_CLOUDY_X:      "\U000F0F2F" # Cloudy Alert
 ICON_WX_SUNNY_X:       "\U000F0F37" # Sunny Alert
 ICON_WX_CLOUDY_AR:     "\U000F0E6E" # Cloud Arrow Right
@@ -56,4 +57,6 @@ ICON_LIGHTBULB_ON:     "\U000F06E8"
 
 ICON_THERMOMETER:      "\U000F10C3"
 ICON_FISH:             "\U000F023A"
+
+ICON_TREE:             "\U000F0405"
 

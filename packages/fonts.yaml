@@ -7,7 +7,7 @@ font:
   - file: "fonts/arial.ttf"
     id: font_very_big
     size: ${FONT_SIZE_CLOCK}
-    glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ' ]
+    glyphs: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', ' ', 'C', '='  ]
 
   - file: "fonts/arial.ttf"
     id: font_values_big
@@ -28,7 +28,7 @@ font:
 
   - file: "fonts/arial.ttf"
     id: font_values_tiny
-    size: 12
+    size: ${FONT_SIZE_TINY}
 
   - file: "fonts/futura.ttf"
     id: font_title
@@ -83,6 +83,7 @@ font:
       - $ICON_WX_WINDY
       - $ICON_WX_WINDY_X
       - $ICON_LIGHTBULB_ON
+      - $ICON_TREE
 
   - file: "fonts/mdi.ttf"
     id: font_mdi
@@ -107,12 +108,12 @@ color:
     blue: 20%
     green: 20%
   - id: button_bg
-    blue: 80%
-    red: 30%
-    green: 30%
+    blue: 40%
+    red: 40%
+    green: 0%
   - id: bar_bg
-    blue: 100%
-    red: 0%
+    blue: 43%
+    red: 58%
     green: 0%
   - id: color_labels
     red: 60%
@@ -150,4 +151,9 @@ color:
     red: 20%
     green: 20%
     blue: 75%
+  - id: my_darkgreen
+    red: 20%
+    blue: 25%
+    green: 80%
+
     
