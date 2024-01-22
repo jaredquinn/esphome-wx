@@ -27,7 +27,7 @@ substitutions:
   FONT_SIZE_CLOCK: "52"
   FONT_SIZE_BIG: "30"
   FONT_SIZE_ICONS: "60"
-  <<: !include packages/fonts_subs.yaml
+  <<: !include includes/fonts_subs.yaml
 
 ```
 These fonts substitutions require some font sizes to be defined in substitutions to allow
@@ -162,7 +162,7 @@ Edit the newly created devicename.yaml file, firstly adding the include file fro
 esphome:
   name: testscreen
   includes:
-  - display_functions.h
+  - includes/display_functions.h
 ```
 
 All sensors used in the demo code can be found in the packages/ha_sensors.yaml and packages/internal.yaml files.
