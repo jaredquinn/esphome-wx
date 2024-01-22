@@ -1,0 +1,65 @@
+lambda: |-
+   if(id(weather_condition).has_state()) {
+     auto valC = Color::WHITE;
+     std::string icon = "";
+     if(id(weather_condition).state == "rainy")           { icon = to_string("$ICON_WX_RAINY");     valC = id(my_blue); }
+     if(id(weather_condition).state == "cloudy")          { icon = to_string("$ICON_WX_CLOUDY");    valC = id(my_grey); }
+     if(id(weather_condition).state == "sunny")           { icon = to_string("$ICON_WX_SUNNY");     valC = id(my_yellow); }
+     if(id(weather_condition).state == "clear-night")     { icon = to_string("$ICON_WX_NIGHT");     valC = id(my_blue); }
+     if(id(weather_condition).state == "exceptional")     { icon = to_string("$ICON_ALERT");        valC = id(my_red); }
+     if(id(weather_condition).state == "fog")             { icon = to_string("$ICON_WX_FOG");       valC = id(my_grey); }
+     if(id(weather_condition).state == "hail")            { icon = to_string("$ICON_WX_HAIL");      valC = id(my_blue); }
+     if(id(weather_condition).state == "lightning")       { icon = to_string("$ICON_WX_LIGHTNING"); valC = id(my_blue); }
+     if(id(weather_condition).state == "lightning-rainy") { icon = to_string("$ICON_WX_LNING_RAIN");valC = id(my_blue); }
+     if(id(weather_condition).state == "partlycloudy")    { icon = to_string("$ICON_WX_PART_CLOUD");valC = id(my_blue); }
+     if(id(weather_condition).state == "pouring")         { icon = to_string("$ICON_WX_POURING");   valC = id(my_blue); }
+     if(id(weather_condition).state == "snowy")           { icon = to_string("$ICON_WX_SNOWY");     valC = Color::WHITE; }
+     if(id(weather_condition).state == "snowy-rainy")     { icon = to_string("$ICON_WX_SNOWRAIN");  valC = Color::WHITE; }
+     if(id(weather_condition).state == "windy")           { icon = to_string("$ICON_WX_WINDY");     valC = Color::WHITE; }
+     if(id(weather_condition).state == "windy-variant")   { icon = to_string("$ICON_WX_WINDY_X");   valC = Color::WHITE; }
+
+     it.print(120, 60, id(font_mdi_large), valC, TextAlign::CENTER, icon.c_str());
+   }
+
+   it.strftime(120, 120,  id(font_very_big), id(color_clock), TextAlign::CENTER, "%H:%M", id(nettime).now());
+   if(id(nettime).now().second % 2 == 0) {
+     it.print(120, 120, id(font_very_big), Color::BLACK, TextAlign::CENTER, ":");
+   }
+
+   it.strftime(25, 110, id(font_values_small), id(color_labels), TextAlign::CENTER, "%a", id(nettime).now());
+   it.strftime(25, 130, id(font_values_small), id(color_labels), TextAlign::CENTER, "%d", id(nettime).now());
+
+   it.strftime(215, 110, id(font_values_small), id(color_labels), TextAlign::CENTER, "%b", id(nettime).now());
+   it.strftime(215, 130, id(font_values_small), id(color_labels), TextAlign::CENTER, "%Y", id(nettime).now());
+
+   it.print(60, 180, id(font_labels), id(color_labels), TextAlign::CENTER, "OUT");
+   if(id(outside_temperature).has_state())  {
+     it.printf(60, 160, id(font_values_big), Color::WHITE, TextAlign::CENTER, "%0.1f°", id(outside_temperature).state);
+   }
+   if(id(outside_humidity).has_state())  {
+     it.printf(60, 196, id(font_values), Color::WHITE, TextAlign::CENTER, "%.0f %%", id(outside_humidity).state);
+   }
+  
+   it.print(180, 180, id(font_labels), id(color_labels), TextAlign::CENTER, "IN");
+   if(id(inside_temperature).has_state())  {
+     it.printf(180, 160, id(font_values_big), Color::WHITE, TextAlign::CENTER, "%0.1f°", id(inside_temperature).state);
+   }
+
+   if(id(inside_humidity).has_state())  {
+     it.printf(180, 196, id(font_values), Color::WHITE, TextAlign::CENTER, "%.0f %%", id(inside_humidity).state);
+   }
+
+
+   if((id(nettime).now().second/5) % 2 == 0) {
+      if(id(aquarium_temperature).has_state()) {
+	it.printf(120, 196, id(font_compass), id(my_blue), TextAlign::CENTER, "%s", to_string("${ICON_FISH}").c_str());
+	it.printf(120, 220, id(font_values), id(my_blue), TextAlign::CENTER, "%.2f°", id(aquarium_temperature).state);
+      }
+   } else {
+      if(id(barometric_pressure).has_state()) {
+	it.printf(120, 196, id(font_compass), id(color_labels), TextAlign::CENTER, "%s", to_string("${ICON_GAUGE}").c_str());
+	it.printf(120, 220, id(font_values), id(color_labels), TextAlign::CENTER, "%.0f", id(barometric_pressure).state);
+      }
+   }
+
+
