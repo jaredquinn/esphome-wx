@@ -7,8 +7,7 @@
 namespace esphome {
 namespace gc9a01 {
 
-class GC9A01 : public PollingComponent,
-               public display::DisplayBuffer,
+class GC9A01 : public display::DisplayBuffer,
                public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW, spi::CLOCK_PHASE_LEADING,
                                      spi::DATA_RATE_8MHZ> {
  public:

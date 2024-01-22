@@ -1,5 +1,5 @@
 import esphome.codegen as cg
-import esphome.config_validation as cv
+import esphome.config_validation as cv 
 from esphome import pins
 from esphome.components import spi
 from esphome.components import display
@@ -13,9 +13,9 @@ from esphome.const import (
     CONF_HEIGHT,
 )
 
-CODEOWNERS = ["@4cello"]
-# adapted from https://github.com/PaintYourDragon/Adafruit_GC9A01A
+from esphome.const import __version__ as ESPHOME_VERSION
 
+CODEOWNERS = ["@4cello"]
 DEPENDENCIES = ["spi"]
 
 CONF_OFFSET_X = "offset_x"
@@ -24,8 +24,9 @@ CONF_EIGHT_BIT_COLOR = "eight_bit_color"
 
 gc9a01_ns = cg.esphome_ns.namespace("gc9a01")
 SPIGC9A01 = gc9a01_ns.class_(
-    "GC9A01", cg.PollingComponent, display.DisplayBuffer, spi.SPIDevice
+    "GC9A01", spi.SPIDevice, display.DisplayBuffer,
 )
+#    "GC9A01", cg.PollingComponent, spi.SPIDevice, display.Display, display.DisplayBuffer
 
 GC9A01_SCHEMA = display.FULL_DISPLAY_SCHEMA.extend(
     {
@@ -52,12 +53,16 @@ CONFIG_SCHEMA = cv.All(
 
 
 async def setup_gc9a01(var, config):
-    await cg.register_component(var, config)
+
+    if cv.Version.parse(ESPHOME_VERSION) < cv.Version.parse("2023.11.0"):
+        await cg.register_component(var, config)
+
     await display.register_display(var, config)
 
     if CONF_RESET_PIN in config:
         reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
         cg.add(var.set_reset_pin(reset))
+
     if CONF_LAMBDA in config:
         lambda_ = await cg.process_lambda(
             config[CONF_LAMBDA], [(display.DisplayRef, "it")], return_type=cg.void
@@ -79,3 +84,4 @@ async def to_code(config):
 
     dc = await cg.gpio_pin_expression(config[CONF_DC_PIN])
     cg.add(var.set_dc_pin(dc))
+

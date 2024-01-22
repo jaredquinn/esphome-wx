@@ -170,7 +170,7 @@ void GC9A01::dump_config() {
   ESP_LOGD(TAG, "  Width: %d", this->width_);
   ESP_LOGD(TAG, "  OffsetX: %d", this->colstart_);
   ESP_LOGD(TAG, "  OffsetY: %d", this->rowstart_);
-  LOG_UPDATE_INTERVAL(this);
+  /* LOG_UPDATE_INTERVAL(this); */
 }
 
 void HOT GC9A01::writecommand_(uint8_t value) {
