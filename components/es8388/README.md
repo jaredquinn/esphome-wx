@@ -4,6 +4,18 @@
 
 This is a work in progress porting the full feature set of the Everest Semi (ES8388 and family) audio mixing ICs for esphome.
 
+## About the ES8388
+
+ES8388 is a high performance, low power and low cost audio CODEC.
+
+It consists of 2-ch ADC, 2-ch DAC, microphone amplifier, headphone amplifier, digital sound effects, and analog mixing and gain functions.
+
+The device uses advanced multi-bit delta-sigma modulation technique to convert data between digital and analog. The multi-bit delta-sigma modulators make the device with low sensitivity to clock jitter and low out of band noise.
+
+For full details of the ES8388 IC see it's [datasheet](http://www.everest-semi.com/pdf/ES8388%20DS.pdf).
+
+## Goals
+
 While this IC works perfectly with ESPhome's i2s subsystems for speaker, microphone and media player the chip support previously consisted of a PR that hard coded some sensible defaults in a setup() routine [found in esphome PR#3552](https://github.com/esphome/esphome/pull/3552).
 
 The ultimate goal of this component is to allow users of this family of chips to control all features available on the I2C bus, which consists of 8 master control registers, 14 ADC control registers and 30 DAC control registers - including:
@@ -22,16 +34,6 @@ The ultimate goal of this component is to allow users of this family of chips to
 This chip can be found in [AI Tinker's ESP32-A1S SoC/Audio Module](https://docs.ai-thinker.com/en/esp32-a1s) which includes it in some variants.
 It can also be found in various audio developmment boards such as [this one on AliExpress](https://www.aliexpress.com/i/1005003572034387.html) selling for around $20AUD.
 
-
-## About the ES8388
-
-ES8388 is a high performance, low power and low cost audio CODEC.
-
-It consists of 2-ch ADC, 2-ch DAC, microphone amplifier, headphone amplifier, digital sound effects, and analog mixing and gain functions.
-
-The device uses advanced multi-bit delta-sigma modulation technique to convert data between digital and analog. The multi-bit delta-sigma modulators make the device with low sensitivity to clock jitter and low out of band noise.
-
-For full details of the ES8388 IC see it's [datasheet](http://www.everest-semi.com/pdf/ES8388%20DS.pdf).
 
 ## Currently Implemented
 
