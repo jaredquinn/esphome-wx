@@ -4,7 +4,7 @@
 
 This is a work in progress porting the full feature set of the Everest Semi (ES8388 and family) audio mixing ICs for esphome.
 
-While this IC works perfectly with ESPhome's i2s subsystems for speaker, microphone and media player the chip support previously consisted of a PR that hard coded some sensible defaults in a setup() routine [found here](https://github.com/esphome/esphome/pull/3552).
+While this IC works perfectly with ESPhome's i2s subsystems for speaker, microphone and media player the chip support previously consisted of a PR that hard coded some sensible defaults in a setup() routine [found in esphome PR#3552](https://github.com/esphome/esphome/pull/3552).
 
 The ultimate goal of this component is to allow users of this family of chips to control all features available on the I2C bus, which consists of 8 master control registers, 14 ADC control registers and 30 DAC control registers - including:
 
