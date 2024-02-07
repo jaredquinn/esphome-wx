@@ -49,6 +49,8 @@ external_components:
       type: git
       url: https://github.com/jaredquinn/esphome-wx/components
     components: [es8388]
+
+es8388:
 ```
 
 From a local copy:
