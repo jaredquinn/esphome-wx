@@ -121,6 +121,9 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   uint8_t getOutputVolume();
   uint8_t getInputGain();
 
+  void mode_voice_recording();
+  void mode_default();
+
   void set_output_volume_sensor(sensor::Sensor *output_volume_sensor) { output_volume_sensor_ = output_volume_sensor; }
   void set_input_gain_sensor(sensor::Sensor *input_gain_sensor) { input_gain_sensor_ = input_gain_sensor; }
 };

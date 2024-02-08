@@ -49,7 +49,19 @@ uint8_t ES8388Component::getInputGain() {
   return data;
 }
 
+void ES8388Component::mode_default() {
+  this->write_byte(0x09, 0x88); // ADC amp 24dB
+}
 
+void ES8388Component::mode_voice_recording() {
+  this->write_byte(0x09, 0x77); //  +21dB : recommended value for ALC & voice recording
+// ALC Config (as recommended by ES8388 user guide for voice recording)
+  this->write_byte(0x12, 0xe2); // Reg 0x12 = 0xe2 (ALC enable, PGA Max. Gain=23.5dB, Min. Gain=0dB)
+  this->write_byte(0x13, 0xa0); // Reg 0x13 = 0xa0 (ALC Target=-1.5dB, ALC Hold time =0 mS)
+  this->write_byte(0x14, 0x12); // Reg 0x14 = 0x12(Decay time =820uS , Attack time = 416 uS)
+  this->write_byte(0x15, 0x06); // Reg 0x15 = 0x06(ALC mode)
+  this->write_byte(0x16, 0xc3); // Reg 0x16 = 0xc3(nose gate = -40.5dB, NGG = 0x01(mute ADC))
+}
 
 void ES8388Component::setup() {
   PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
@@ -86,8 +98,7 @@ void ES8388Component::setup() {
 
   // ADC poweroff
   this->write_byte(0x03, 0xFF);
-  // ADC amp 24dB
-  this->write_byte(0x09, 0x88);
+
   // LINPUT1/RINPUT1
   this->write_byte(0x0A, 0x00);
   // ADC mono left
@@ -114,6 +125,8 @@ void ES8388Component::setup() {
   this->write_byte(0x2F, 0x1C);
   // unmute
   this->write_byte(0x19, 0x00);
+
+  mode_voice_recording();
 }
 
 }  // namespace es8388
