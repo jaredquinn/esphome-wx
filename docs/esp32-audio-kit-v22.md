@@ -15,6 +15,7 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 ### Audio Functions
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |21|Amplifier Enabled| |
 |39|Headphone Sense Detect| |
 
@@ -22,12 +23,14 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 ### I2C
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |32|I2C SCL| |
 |33|I2C SDA| |
 
 ### I2S
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |0|I2S MCLK| |
 |25|I2S BCLK| |
 |26|I2S DOUT| |
@@ -37,6 +40,7 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 ### Buttons and LEDs
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |36|Key 1| |
 |13|Key 2| |
 |19|LED 2|Key 3|
@@ -51,6 +55,7 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 Untested.
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |2|SD Card DATA0| |
 |4|SD Card DATA1| |
 |12|SD Card DATA2| |
@@ -62,6 +67,7 @@ Untested.
 ### System
 
 |GPIO|Function|Optional|
+|----|--------|--------|
 |1,3|UART0| |
 |16,17|UART1| |
 |6-11|Internal Flash| |
