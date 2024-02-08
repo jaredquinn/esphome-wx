@@ -14,7 +14,7 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 
 ### Audio Functions
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |21|Amplifier Enabled| |
 |39|Headphone Sense Detect| |
@@ -22,14 +22,14 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 
 ### I2C
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |32|I2C SCL| |
 |33|I2C SDA| |
 
 ### I2S
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |0|I2S MCLK| |
 |25|I2S BCLK| |
@@ -39,12 +39,12 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 
 ### Buttons and LEDs
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |36|Key 1| |
 |13|Key 2| |
-|19|LED 2|Key 3|
-|19|Key 3|LED 2|
+|19|LED 2|Shared with Key 3|
+|19|Key 3|Shared with LED 2|
 |23|Key 4| |
 |18|Key 5| |
 |5|Key 6| |
@@ -54,19 +54,19 @@ This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on th
 
 Untested.
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |2|SD Card DATA0| |
 |4|SD Card DATA1| |
 |12|SD Card DATA2| |
-|13|SD Card DATA3|Key 2|
+|13|SD Card DATA3|Shared with Key 2|
 |14|SD Card CLOCK| |
-|15|SD Card Command|JTAG|
+|15|SD Card Command|Shared with JTAG|
 |34|SD Card Detect| |
 
 ### System
 
-|GPIO|Function|Optional|
+|GPIO|Function|Notes|
 |----|--------|--------|
 |1,3|UART0| |
 |16,17|UART1| |
