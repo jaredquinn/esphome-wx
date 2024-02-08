@@ -4,7 +4,7 @@
 
 Seems to be an AI Tinker clone sold frequently at [AliExpress](https://www.aliexpress.com/item/1005006081623609.html) for around $20AUD.
 
-You can find a full esphome configuration for this board [here](/voiceassistant.yaml).
+You can find a full esphome configuration for this board [here](/esp32-audio-kit.yaml).
 
 ![ESP32 Audio Kit](image/esp32-audio-kit.png)
 
