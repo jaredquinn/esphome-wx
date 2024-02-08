@@ -26,8 +26,10 @@ packages:
 logger:
   level: DEBUG
 
+# PSRam required for any kind of reasonable playback!
 psram:
 
+# See the es8388 component in this repository
 es8388:
 
 i2c:
@@ -36,6 +38,9 @@ i2c:
   frequency: 400kHz
   scan: true
 
+# We aren't currently using the SPI bus but here is
+# the config
+#
 #spi:
 #  mosi_pin: GPIO15
 #  miso_pin: GPIO2
@@ -217,13 +222,6 @@ binary_sensor:
     name: "Key 6"
     filters:
       - delayed_off: 10ms
-
-  - platform: gpio
-    pin: 
-      number: GPIO15
-      mode: input
-    name: "Extra"
-
 
 
 text_sensor:
