@@ -2,7 +2,7 @@
 # ESP32 Audio Kit v2.2
 
 
-Seems to be an AI Tinker clone sold frequently at [AliExpress](https://www.aliexpress.com/item/1005006081623609.html).
+Seems to be an AI Tinker clone sold frequently at [AliExpress](https://www.aliexpress.com/item/1005006081623609.html) for around $20AUD.
 
 ![ESP32 Audio Kit](image/esp32-audio-kit.png)
 
