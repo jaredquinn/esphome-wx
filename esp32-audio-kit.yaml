@@ -63,7 +63,7 @@ media_player:
     name: DIY Media 1
     i2s_dout_pin: GPIO26
     dac_type: external
-    mode: stereo
+    mode: mono
     id: i2smedia
     on_play:
       - logger.log: "Playback started!"
@@ -75,17 +75,29 @@ media_player:
 voice_assistant:
   microphone: i2smic
   media_player: i2smedia
+  on_listening:
+    - light.turn_on:
+        id: red_led
+  on_start:
+    - light.turn_off:
+        id: red_led
   on_stt_end:
+    - light.turn_off:
+        id: red_led
     - text_sensor.template.publish:
         id: last_stt
         state: !lambda 'return x;'
   on_stt_vad_start:
+    - light.turn_off:
+        id: red_led
     - homeassistant.service:
         service: input_text.set_value
         data:
           value: media_player.voice_box_player
           entity_id: input_text.last_voice_box_triggered
   on_tts_start:
+    - light.turn_off:
+        id: red_led
     - text_sensor.template.publish:
         id: last_tts
         state: !lambda 'return x;'
@@ -104,7 +116,7 @@ output:
     pin: 
       number: GPIO22
       inverted: true
-    id: light22
+    id: output_led
 
 # Using this as an LED causes button issues
 #
@@ -119,7 +131,8 @@ output:
 light:
   - platform: binary
     name: "Red LED"
-    output: light22
+    id: red_led
+    output: output_led
     restore_mode: ALWAYS_OFF
 
 # Using this as an LED causes button issues
@@ -175,6 +188,8 @@ binary_sensor:
           condition: voice_assistant.is_running
           then:
             - voice_assistant.stop:
+            - light.turn_off:
+                id: red_led
           else:
             - voice_assistant.start_continuous:
 
@@ -222,6 +237,16 @@ binary_sensor:
     name: "Key 6"
     filters:
       - delayed_off: 10ms
+    on_press:
+      - voice_assistant.start:
+          silence_detection: false
+    on_release:
+      - voice_assistant.stop:
+
+  - platform: gpio
+    pin: 
+      number: GPIO15
+      mode: input
 
 
 text_sensor:
