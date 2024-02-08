@@ -1,0 +1,241 @@
+
+esphome:
+  name: esp32-audio-kit
+
+substitutions:
+   NODE: DIY Media
+   NAME: mediasatalpha
+ 
+esp32:
+  board: esp-wrover-kit
+  framework:
+    type: arduino
+
+external_components:
+  - source: 
+      type: git
+      url: https://github.com/jaredquinn/esphome-wx
+    components: [es8388]
+
+<<: !include includes/common_network.yaml
+
+packages:
+  internal: !include packages/internal_sensors.yaml
+  debug: !include packages/debug_esp32.yaml
+ 
+logger:
+  level: DEBUG
+
+psram:
+
+es8388:
+
+i2c:
+  sda: GPIO33
+  scl: GPIO32
+  frequency: 400kHz
+  scan: true
+
+#spi:
+#  mosi_pin: GPIO15
+#  miso_pin: GPIO2
+#  clk_pin: GPIO14
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO27
+  i2s_mclk_pin: GPIO0
+
+microphone:
+  - platform: i2s_audio
+    id: i2smic
+    i2s_din_pin: GPIO35
+    adc_type: external
+    pdm: false
+
+media_player:
+  - platform: i2s_audio
+    name: DIY Media 1
+    i2s_dout_pin: GPIO26
+    dac_type: external
+    mode: stereo
+    id: i2smedia
+    on_play:
+      - logger.log: "Playback started!"
+    on_pause:
+      - logger.log: "Playback paused!"
+    on_idle:
+      - logger.log: "Playback finished!"
+
+voice_assistant:
+  microphone: i2smic
+  media_player: i2smedia
+  on_stt_end:
+    - text_sensor.template.publish:
+        id: last_stt
+        state: !lambda 'return x;'
+  on_stt_vad_start:
+    - homeassistant.service:
+        service: input_text.set_value
+        data:
+          value: media_player.voice_box_player
+          entity_id: input_text.last_voice_box_triggered
+  on_tts_start:
+    - text_sensor.template.publish:
+        id: last_tts
+        state: !lambda 'return x;'
+    - homeassistant.service:
+        service: script.esphome_notify
+        data:
+          target: media_player.voice_box_player
+        data_template:
+          message: "{{ msg }}"
+        variables:
+          msg: return x;
+
+output:
+
+  - platform: ledc
+    pin: 
+      number: GPIO22
+      inverted: true
+    id: light22
+
+# Using this as an LED causes button issues
+#
+#  - platform: ledc
+#    pin: 
+#      number: GPIO19
+#      allow_other_uses: true
+#      inverted: true
+#      mode: input_pullup
+#    id: light19
+
+light:
+  - platform: binary
+    name: "Red LED"
+    output: light22
+    restore_mode: ALWAYS_OFF
+
+# Using this as an LED causes button issues
+#
+#  - platform: binary
+#    name: "Shared LED"
+#    output: light19
+#    restore_mode: ALWAYS_OFF
+
+switch:
+  - platform: gpio
+    pin: GPIO21
+    name: "Amplifier"
+
+sensor:
+  - platform: es8388
+    output_volume:
+      name: "Output Volume"
+    input_gain:
+      name: "Input Gain"
+
+binary_sensor:
+
+  - platform: gpio
+    pin: 
+       number: GPIO39
+       inverted: true
+    name: "Jack Sense"
+    filters:
+      - delayed_off: 50ms
+      - delayed_on: 50ms
+
+  - platform: gpio
+    pin: 
+       number: GPIO34
+       inverted: true
+    name: "SDCard Sense"
+    filters:
+      - delayed_off: 50ms
+      - delayed_on: 50ms
+
+
+
+  - platform: gpio
+    pin: 
+      number: GPIO36
+      inverted: true
+    name: "Key 1"
+    filters:
+      - delayed_off: 10ms
+    on_click:
+      - if:
+          condition: voice_assistant.is_running
+          then:
+            - voice_assistant.stop:
+          else:
+            - voice_assistant.start_continuous:
+
+  - platform: gpio
+    pin: 
+      number: GPIO13
+      inverted: true
+    name: "Key 2"
+    filters:
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin: 
+      number: GPIO19
+      inverted: true
+      mode: input_pullup
+      #allow_other_uses: true
+    name: "Key 3"
+    filters:
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin: 
+      number: GPIO23
+      mode: input_pullup
+      inverted: true
+    name: "Key 4"
+    filters:
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin: 
+      number: GPIO18
+      mode: input_pullup
+      inverted: true
+    name: "Key 5"
+    filters:
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin: 
+      number: GPIO5
+      mode: input_pullup
+      inverted: true
+    name: "Key 6"
+    filters:
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin: 
+      number: GPIO15
+      mode: input
+    name: "Extra"
+
+
+
+text_sensor:
+  - platform: template
+    name: "Last STT"
+    id: last_stt
+    entity_category: diagnostic
+    update_interval: never
+
+  - platform: template
+    name: "Last TTS"
+    id: last_tts
+    entity_category: diagnostic
+    update_interval: never
+
