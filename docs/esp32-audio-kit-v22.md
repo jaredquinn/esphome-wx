@@ -4,6 +4,8 @@
 
 Seems to be an AI Tinker clone sold frequently at [AliExpress](https://www.aliexpress.com/item/1005006081623609.html).
 
+![ESP32 Audio Kit](image/esp32-audio-kit.png)
+
 
 ## ESP32
 
