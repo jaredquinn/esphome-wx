@@ -243,11 +243,6 @@ binary_sensor:
     on_release:
       - voice_assistant.stop:
 
-  - platform: gpio
-    pin: 
-      number: GPIO15
-      mode: input
-
 
 text_sensor:
   - platform: template
