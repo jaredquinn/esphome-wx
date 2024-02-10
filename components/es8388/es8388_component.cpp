@@ -67,22 +67,22 @@ void ES8388Component::setup() {
   PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
   WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) & 0xFFFFFFF0);
 
-  // mute
-  this->write_byte(0x19, 0x04);
-  // powerup
-  this->write_byte(0x01, 0x50);
-  this->write_byte(0x02, 0x00);
-  // worker mode
-  this->write_byte(0x08, 0x00);
+  this->write_byte(0x19, 0x04); // mute
+  this->write_byte(ES8388_MASTERMODE, 0x00); // worker mode
+  this->write_byte(ES8388_CHIPPOWER, 0xFF);  // Power down DEM/STM
+  this->write_byte(ES8388_CONTROL1, 0x05);   // Set Chip to Play&Record Mode
+  this->write_byte(ES8388_CONTROL2, 0x40);   // Power Up Analog and Ibias
+
   // DAC powerdown
-  this->write_byte(0x04, 0xC0);
+  //this->write_byte(ES8388_DACPOWER, 0xC0);
+  this->write_byte(ES8388_DACPOWER, 0x3C);  // Power Up DAC& enable Lout/Rout
   // vmidsel/500k ADC/DAC idem
-  this->write_byte(0x00, 0x12);
+  //this->write_byte(0x00, 0x12);
 
   // i2s 16 bits
-  this->write_byte(0x17, 0x18);
-  // sample freq 256
-  this->write_byte(0x18, 0x02);
+  this->write_byte(ES8388_DACCONTROL1, 0x18); // SFI setting (i2s mode/16 bit)
+  this->write_byte(ES8388_DACCONTROL2, 0x02); //  DAC MCLK/LCRK ratio (256)
+
   // LIN2/RIN2 for mixer
   this->write_byte(0x26, 0x00);
   // left DAC to left mixer
@@ -100,13 +100,12 @@ void ES8388Component::setup() {
   this->write_byte(0x03, 0xFF);
 
   // LINPUT1/RINPUT1
-  this->write_byte(0x0A, 0x00);
+  this->write_byte(ES8388_ADCCONTROL2, 0x50); // MIC2
   // ADC mono left
-  this->write_byte(0x0B, 0x02);
+  this->write_byte(ES8388_ADCCONTROL3, 0x02);
   // i2S 16b
-  this->write_byte(0x0C, 0x0C);
-  // MCLK 256
-  this->write_byte(0x0D, 0x02);
+  this->write_byte(ES8388_ADCCONTROL4, 0x0D); // / Left/Right data, Left/Right justified mode, Bits length, I2S format
+  this->write_byte(ES8388_ADCCONTROL5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
   // ADC Volume
   this->write_byte(0x10, 0x00);
   this->write_byte(0x11, 0x00);
@@ -123,8 +122,10 @@ void ES8388Component::setup() {
   // DAC volume max
   this->write_byte(0x2E, 0x1C);
   this->write_byte(0x2F, 0x1C);
-  // unmute
-  this->write_byte(0x19, 0x00);
+
+  this->write_byte(ES8388_CHIPPOWER, 0x00); // power up chip
+  this->write_byte(ES8388_ADCPOWER, 0x09); //  //Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
+  this->write_byte(ES8388_DACCONTROL3, 0x00); // unmute DAC
 
   mode_voice_recording();
 }
