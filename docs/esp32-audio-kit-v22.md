@@ -13,6 +13,8 @@ You can find a full esphome configuration for this board [here](/esp32-audio-kit
 
 This devices uses a ESP32-A1S which integrates an ES8388 audio codec chip, on the I2C bus at address 0x10.
 
+The board I have and these pin assignments were found on is labelled as revision A402.
+
 
 ## GPIOs
 
