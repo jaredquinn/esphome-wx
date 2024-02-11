@@ -1,4 +1,16 @@
-# ESPHome Weather Display
+# ESPHome Projects
+
+## Voice Assistant
+
+Currently a work in progress but supporting the ESP32 Audio Kit/ES8388 as a Home Assistant
+Satellite.
+
+Confiugration can be [found here](/esp32-audio-kit.yaml).
+
+Additional details can be found in the [ES8388 Component README](/components/es8388/README.md).
+
+
+## Weather Display
 
 More information on my full weather station setup can be found in the [docs](docs) folder,
 a good starting point is the [background document](docs/background.md).
@@ -33,9 +45,9 @@ substitutions:
 These fonts substitutions require some font sizes to be defined in substitutions to allow
 easy transfer between different density displays demonstrated here.
 
-# Buying a ready made display
+### Buying a ready made display
 
-## ESP32-2432S028
+#### ESP32-2432S028
 ![ESP32-2432S028](docs/image/esp32-2432s028-front.jpeg)
 
 I recently picked up an Sunton ESP32-2432S028; integrated ILI1934, Touchscreen and ESP32 all-in-one
@@ -50,7 +62,7 @@ The full ESPhome configuration, as used by my coffee table unit can be found at 
 
 **This device is now fully supported by this code.**
 
-## ESP32-2424S012
+#### ESP32-2424S012
 
 ![ESP32-2424S012](docs/image/esp32-2424s012.jpeg)
 
@@ -65,14 +77,14 @@ See [ESP32-2424S012](docs/esp32-2424s012.md) for more information on this device
 * Display is working, using a component that is included in this repository (forked and maintained for latest esphome).
 
 
-# Building the display
+#### Building the display
 
-## Hardware Required
+##### Hardware Required
 
 * ESP32 (example uses a DOIT DevKit V1)
 * ESPhome compatible 240x320 TFT Screen (example uses an Adafruit ILI1934 2.8" TFT Touchscreen)
 
-## Wiring
+#### Wiring
 
 ![Wiring Diagram](wiring.png)
 
