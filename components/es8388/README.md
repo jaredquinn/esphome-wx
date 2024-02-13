@@ -14,6 +14,12 @@ The device uses advanced multi-bit delta-sigma modulation technique to convert d
 
 For full details of the ES8388 IC see it's [datasheet](http://www.everest-semi.com/pdf/ES8388%20DS.pdf).
 
+## Implemented Configuration
+
+The first configuration and actions have been implemented, starting with:
+
+* Output volume control
+
 ## Goals
 
 While this IC works perfectly with ESPhome's i2s subsystems for speaker, microphone and media player the chip support previously consisted of a PR that hard coded some sensible defaults in a setup() routine [found in esphome PR#3552](https://github.com/esphome/esphome/pull/3552).
@@ -22,7 +28,6 @@ The ultimate goal of this component is to allow users of this family of chips to
 
 * Input configuration (IN1/IN2/Balanced)
 * Output configuration (OUT1/OUT2/Balanced)
-* Output volume control
 * Input gain control
 * Channel Input select to output mix
 * Mixing mode
