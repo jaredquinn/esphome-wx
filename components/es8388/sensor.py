@@ -17,6 +17,8 @@ from esphome.const import (
 from . import CONF_ES8388_ID, ES8388Component
 
 DEPENDENCIES = ["es8388"]
+
+UNIT_RAW = "raw"
 CONF_VOLUME = "output_volume"
 CONF_GAIN_LEFT = "input_gain_left"
 CONF_GAIN_RIGHT = "input_gain_right"
@@ -24,7 +26,7 @@ CONF_GAIN_RIGHT = "input_gain_right"
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_ES8388_ID): cv.use_id(ES8388Component),
     cv.Optional(CONF_VOLUME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_PERCENT,
+            unit_of_measurement=UNIT_RAW,
             accuracy_decimals=0,
     ),
     cv.Optional(CONF_GAIN_LEFT): sensor.sensor_schema(

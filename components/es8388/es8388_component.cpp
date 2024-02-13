@@ -19,9 +19,7 @@ void ES8388Component::update() {
       this->input_gain_right_sensor_ != nullptr) {
      uint8_t data, left, right;
      data = getInputGain();
-
      ESP_LOGD(TAG, "getInputGain=%d", data);
-
 
      if (this->input_gain_left_sensor_ != nullptr) {
        left = data & 0x0f;
