@@ -94,6 +94,7 @@ void ES8388Component::setup() {
   this->write_byte(0x26, 0x00); // LIN2/RIN2 for mixer
   this->write_byte(0x27, 0x90); // left DAC to left mixer
   this->write_byte(0x2A, 0x90); // right DAC to right mixer
+
   this->write_byte(ES8388_DACCONTROL21, 0x80); // DACLRC ADCLRC idem
   this->write_byte(ES8388_DACCONTROL23, 0x00);
   // DAC volume max

@@ -6,6 +6,7 @@
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/component.h"
 #include "esphome/core/automation.h"
+#include "esphome/core/optional.h"
 #include "esphome/components/sensor/sensor.h"
 
 
@@ -138,9 +139,9 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   void set_input_gain_sensor(sensor::Sensor *input_gain_sensor) { input_gain_sensor_ = input_gain_sensor; }
 };
 
-template<typename... Ts> class ES8388SetOutputVolumeAction : public Action<Ts...> {
+template<typename... Ts> class ES8388ConfigureAction : public Action<Ts...> {
  public:
-  ES8388SetOutputVolumeAction(ES8388Component *parent) : parent_(parent) {}
+  ES8388ConfigureAction(ES8388Component *parent) : parent_(parent) {}
   TEMPLATABLE_VALUE(uint8_t, volume)
 
   void play(Ts... x) { this->parent_->setOutputVolume(this->volume_.value(x...)); }

@@ -65,17 +65,19 @@ external_components:
 es8388:
 ```
 
-## Optional attributes
+## Configurable Options
 
+
+|Attribute|Type|Default|Notes|
+|---------|----|-------|-----|
+|output\_volume|uint\_8|32| |
+
+Example:
 ```
 es8388:
   output_volume: 28
 
 ```
-
-|Attribute|Type|Default|Notes|
-|---------|----|-------|-----|
-|output\_volume|uint\_8|32| |
 
 ## Adding the sensors
 
@@ -90,7 +92,9 @@ sensor:
 
 ## Actions
 
-### set\_output\_volume
+### configure
+
+Perform reconfiguration with the settings available in _Configurable Options_
 
 Example:
 
@@ -104,7 +108,7 @@ Example:
     filters:
       - delayed_off: 10ms
     on_press:
-      - es8388.set_output_volume:
+      - es8388.configure:
           output_volume: 8
 ```
 

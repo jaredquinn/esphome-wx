@@ -16,7 +16,7 @@ CONF_OUTPUT_VOLUME = "output_volume"
 es8388_ns = cg.esphome_ns.namespace("es8388")
 ES8388Component = es8388_ns.class_("ES8388Component", cg.PollingComponent, i2c.I2CDevice) #, cg.PollingComponent)
 
-ES8388SetOutputVolumeAction = es8388_ns.class_("ES8388SetOutputVolumeAction", automation.Action)
+ES8388ConfigureAction = es8388_ns.class_("ES8388ConfigureAction", automation.Action)
 
 CONFIG_SCHEMA_VOLUME = cv.Schema({
     cv.Optional(CONF_OUTPUT_VOLUME, default=32): cv.int_range(0, 32),
@@ -42,10 +42,9 @@ async def to_code(config):
       cg.add(var.setOutputVolume(config[CONF_OUTPUT_VOLUME]))
 
 
-
 @automation.register_action(
-    "es8388.set_output_volume",
-    ES8388SetOutputVolumeAction,
+    "es8388.configure",
+    ES8388ConfigureAction,
     cv.Schema(
       {
          cv.GenerateID(): cv.use_id(ES8388Component),
@@ -53,7 +52,7 @@ async def to_code(config):
       }
     ),
 )
-async def es8388_set_output_volume_action_to_code(config, action_id, template_arg, args):
+async def es8388_configure_action_to_code(config, action_id, template_arg, args):
     paren = await cg.get_variable(config[CONF_ID])
     var = cg.new_Pvariable(action_id, template_arg, paren)
 
