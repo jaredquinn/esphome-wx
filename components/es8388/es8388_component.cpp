@@ -3,6 +3,8 @@
 
 #include <soc/io_mux_reg.h>
 
+static const char *const TAG = "es8388";
+
 
 namespace esphome {
 namespace es8388 {
@@ -21,17 +23,25 @@ void ES8388Component::update() {
 void ES8388Component::loop() {
 }
 
-bool ES8388Component::setOutputVolume(uint8_t vol) {
-  if (vol > 33) vol = 33;
+bool ES8388Component::setOutputVolume() {
+  if (!_ready) return false;
   bool res = true;
   if (_outSel == OUTALL || _outSel == OUT1) {
-    res &= this->write_byte(ES8388_DACCONTROL24, vol);  // LOUT1VOL
-    res &= this->write_byte(ES8388_DACCONTROL25, vol);  // ROUT1VOL
+    ESP_LOGD(TAG, "Setting OUT1 output volume to %d", _vol);
+    res &= this->write_byte(ES8388_DACCONTROL24, _vol);  // LOUT1VOL
+    res &= this->write_byte(ES8388_DACCONTROL25, _vol);  // ROUT1VOL
   } else if (_outSel == OUTALL || _outSel == OUT2) {
-    res &= this->write_byte(ES8388_DACCONTROL26, vol);  // LOUT2VOL
-    res &= this->write_byte(ES8388_DACCONTROL27, vol);  // ROUT2VOL
+    ESP_LOGD(TAG, "Setting OUT2 output volume to %d", _vol);
+    res &= this->write_byte(ES8388_DACCONTROL26, _vol);  // LOUT2VOL
+    res &= this->write_byte(ES8388_DACCONTROL27, _vol);  // ROUT2VOL
   }
   return res;
+}
+
+bool ES8388Component::setOutputVolume(uint8_t vol) {
+  _vol = vol;
+  if (_vol > 33) _vol = 33;
+  return setOutputVolume();
 }
 
 uint8_t ES8388Component::getOutputVolume() {
@@ -54,6 +64,7 @@ void ES8388Component::mode_default() {
 }
 
 void ES8388Component::mode_voice_recording() {
+  ESP_LOGCONFIG(TAG, "Setting voice recording mode");
   this->write_byte(ES8388_ADCCONTROL1, 0x77); //  +21dB : recommended value for ALC & voice recording
   // ALC Config (as recommended by ES8388 user guide for voice recording)
   this->write_byte(ES8388_ADCCONTROL10, 0xe2); // Reg 0x12 = 0xe2 (ALC enable, PGA Max. Gain=23.5dB, Min. Gain=0dB)
@@ -64,6 +75,7 @@ void ES8388Component::mode_voice_recording() {
 }
 
 void ES8388Component::setup() {
+  ESP_LOGCONFIG(TAG, "Performing Setup");
   PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
   WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) & 0xFFFFFFF0);
 
@@ -110,8 +122,10 @@ void ES8388Component::setup() {
   this->write_byte(ES8388_ADCPOWER, 0x09); //  //Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
   this->write_byte(ES8388_DACCONTROL3, 0x00); // unmute DAC
 
-  mode_voice_recording();
-}
+  _ready = true;
 
+  mode_voice_recording();
+  setOutputVolume(); 
+}
 }  // namespace es8388
 }  // namespace esphome

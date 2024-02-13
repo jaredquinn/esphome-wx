@@ -65,6 +65,18 @@ external_components:
 es8388:
 ```
 
+## Optional attributes
+
+```
+es8388:
+  output_volume: 28
+
+```
+
+|Attribute|Type|Default|Notes|
+|---------|----|-------|-----|
+|output\_volume|uint\_8|32| |
+
 ## Adding the sensors
 
 ```
@@ -76,4 +88,23 @@ sensor:
       name: "Input Gain"
 ```
 
+## Actions
+
+### set\_output\_volume
+
+Example:
+
+```
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode: input_pullup
+      inverted: true
+    name: "Key 5"
+    filters:
+      - delayed_off: 10ms
+    on_press:
+      - es8388.set_output_volume:
+          output_volume: 8
+```
 

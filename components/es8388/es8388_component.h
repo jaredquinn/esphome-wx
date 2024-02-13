@@ -1,8 +1,13 @@
 #pragma once
 
+#include <utility>
+#include <vector>
+
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/component.h"
+#include "esphome/core/automation.h"
 #include "esphome/components/sensor/sensor.h"
+
 
 typedef enum {
   MIXIN1,  // direct line 1
@@ -110,6 +115,9 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   sensor::Sensor *output_volume_sensor_{nullptr};
   sensor::Sensor *input_gain_sensor_{nullptr};
 
+  bool _ready = false;
+  uint8_t _vol = 32;
+
   outsel_t _outSel = OUTALL;
   insel_t _inSel = IN1;
 
@@ -117,7 +125,9 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
 
   float get_setup_priority() const override { return setup_priority::LATE - 1; }
 
+  bool setOutputVolume();
   bool setOutputVolume(uint8_t vol);
+
   uint8_t getOutputVolume();
   uint8_t getInputGain();
 
@@ -127,6 +137,18 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   void set_output_volume_sensor(sensor::Sensor *output_volume_sensor) { output_volume_sensor_ = output_volume_sensor; }
   void set_input_gain_sensor(sensor::Sensor *input_gain_sensor) { input_gain_sensor_ = input_gain_sensor; }
 };
+
+template<typename... Ts> class ES8388SetOutputVolumeAction : public Action<Ts...> {
+ public:
+  ES8388SetOutputVolumeAction(ES8388Component *parent) : parent_(parent) {}
+  TEMPLATABLE_VALUE(uint8_t, volume)
+
+  void play(Ts... x) { this->parent_->setOutputVolume(this->volume_.value(x...)); }
+
+ protected:
+  ES8388Component *parent_;
+};
+
 
 }  // namespace es8388
 }  // namespace esphome
