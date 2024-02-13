@@ -114,7 +114,8 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   void update() override;
 
   sensor::Sensor *output_volume_sensor_{nullptr};
-  sensor::Sensor *input_gain_sensor_{nullptr};
+  sensor::Sensor *input_gain_left_sensor_{nullptr};
+  sensor::Sensor *input_gain_right_sensor_{nullptr};
 
   bool _ready = false;
   uint8_t _vol = 32;
@@ -136,7 +137,8 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
   void mode_default();
 
   void set_output_volume_sensor(sensor::Sensor *output_volume_sensor) { output_volume_sensor_ = output_volume_sensor; }
-  void set_input_gain_sensor(sensor::Sensor *input_gain_sensor) { input_gain_sensor_ = input_gain_sensor; }
+  void set_input_gain_left_sensor(sensor::Sensor *input_gain_sensor) { input_gain_left_sensor_ = input_gain_sensor; }
+  void set_input_gain_right_sensor(sensor::Sensor *input_gain_sensor) { input_gain_right_sensor_ = input_gain_sensor; }
 };
 
 template<typename... Ts> class ES8388ConfigureAction : public Action<Ts...> {

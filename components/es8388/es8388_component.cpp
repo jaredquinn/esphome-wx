@@ -9,13 +9,28 @@ static const char *const TAG = "es8388";
 namespace esphome {
 namespace es8388 {
 
+
 void ES8388Component::update() {
   if (this->output_volume_sensor_ != nullptr) {
     this->output_volume_sensor_->publish_state(getOutputVolume());
   }
 
-  if (this->input_gain_sensor_ != nullptr) {
-    this->input_gain_sensor_->publish_state(getInputGain());
+  if (this->input_gain_left_sensor_ != nullptr ||
+      this->input_gain_right_sensor_ != nullptr) {
+     uint8_t data, left, right;
+     data = getInputGain();
+
+     ESP_LOGD(TAG, "getInputGain=%d", data);
+
+
+     if (this->input_gain_left_sensor_ != nullptr) {
+       left = data & 0x0f;
+       this->input_gain_left_sensor_->publish_state(left*3);
+     }
+     if (this->input_gain_right_sensor_ != nullptr) {
+       right = data >> 4 & 0x0f;
+       this->input_gain_right_sensor_->publish_state(right*3);
+    }
   }
 }
 
@@ -46,12 +61,9 @@ bool ES8388Component::setOutputVolume(uint8_t vol) {
 
 uint8_t ES8388Component::getOutputVolume() {
   uint8_t data;
-  uint8_t calc;
   this->read_byte(ES8388_DACCONTROL24, &data);
-  calc = uint8_t(float(data) / float(33) * float(100));
-  return calc;
+  return data;
 }
-
 
 uint8_t ES8388Component::getInputGain() {
   uint8_t data;

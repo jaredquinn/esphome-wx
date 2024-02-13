@@ -81,13 +81,22 @@ es8388:
 
 ## Adding the sensors
 
+|Sensor ID|Unit|Description|
+|---------|----|-----------|
+|output\_volume|Value|1-33 raw volume value|
+|input\_gain\_left|dB|+0 - +24dB in 3dB Steps|
+|input\_gain\_right|dB|+0 - +24dB in 3dB Steps|
+
+
 ```
 sensor:
   - platform: es8388
     output_volume:
       name: "Output Volume"
-    input_gain:
+    input_gain_left:
       name: "Input Gain"
+    input_gain_right:
+      name: "Input Right"
 ```
 
 ## Actions
