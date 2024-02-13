@@ -57,6 +57,21 @@ bool ES8388Component::setOutputVolume(uint8_t vol) {
   return setOutputVolume();
 }
 
+bool ES8388Component::setInputChannels(InputChannels one) {
+  return setInputChannels(one,one);
+}
+
+bool ES8388Component::setInputChannels(InputChannels left, InputChannels right) {
+  bool res = true;
+  uint8_t val, lc, rc = 0;
+  lc = (uint8_t)left;
+  rc = (uint8_t)right;
+  val = lc << 6 | rc << 4 | 0 & 0x03;
+  ESP_LOGD(TAG, "SetInputChannels setting ADCCONTROL2 to %d", val);
+  res &= this->write_byte(ES8388_ADCCONTROL2, val);  // ROUT2VOL
+  return res;
+}
+
 uint8_t ES8388Component::getOutputVolume() {
   uint8_t data;
   this->read_byte(ES8388_DACCONTROL24, &data);
@@ -112,7 +127,7 @@ void ES8388Component::setup() {
   this->write_byte(0x1A, 0x00);
 
   this->write_byte(ES8388_ADCPOWER, 0xFF);    // ADC poweroff
-  this->write_byte(ES8388_ADCCONTROL2, 0x50); // MIC2
+  //this->write_byte(ES8388_ADCCONTROL2, 0x50); // MIC2
   this->write_byte(ES8388_ADCCONTROL3, 0x02); // ADC mono left
   this->write_byte(ES8388_ADCCONTROL4, 0x0D); // / Left/Right data, Left/Right justified mode, Bits length, I2S format
   this->write_byte(ES8388_ADCCONTROL5, 0x02); // ADCFsMode,singel SPEED,RATIO=256

@@ -19,6 +19,7 @@ For full details of the ES8388 IC see it's [datasheet](http://www.everest-semi.c
 The first configuration and actions have been implemented, starting with:
 
 * Output volume control
+* Channel Input select
 
 ## Goals
 
@@ -29,7 +30,7 @@ The ultimate goal of this component is to allow users of this family of chips to
 * Input configuration (IN1/IN2/Balanced)
 * Output configuration (OUT1/OUT2/Balanced)
 * Input gain control
-* Channel Input select to output mix
+* Output mix
 * Mixing mode
 * I2S configuration modes
 * High pass filters
@@ -76,12 +77,15 @@ es8388:
 |Attribute|Type|Default|Notes|
 |---------|----|-------|-----|
 |output\_volume|uint\_8|32| |
+|input\_channel|enum|INPUT1|INPUT1, INPUT2, RESERVED, DIFFERENTIAL*|
+
+* Differential not fully implemented yet
 
 Example:
 ```
 es8388:
   output_volume: 28
-
+  input_channel: INPUT2
 ```
 
 ## Adding the sensors
@@ -123,6 +127,7 @@ Example:
       - delayed_off: 10ms
     on_press:
       - es8388.configure:
+          input_channel: INPUT1
           output_volume: 8
 ```
 

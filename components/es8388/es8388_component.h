@@ -10,6 +10,7 @@
 #include "esphome/components/sensor/sensor.h"
 
 
+
 typedef enum {
   MIXIN1,  // direct line 1
   MIXIN2,  // direct line 2
@@ -46,7 +47,6 @@ typedef enum {
 
 namespace esphome {
 namespace es8388 {
-
 
 
 
@@ -108,10 +108,14 @@ namespace es8388 {
 #define ES8388_DACCONTROL29 0x33
 #define ES8388_DACCONTROL30 0x34
 
+enum class InputChannels : std::uint8_t { INPUT1 = 0, INPUT2 = 1, RESERVED = 2, DIFFERENTAL = 3 };
+
 class ES8388Component : public PollingComponent, public i2c::I2CDevice {
  public:
   void loop() override;
   void update() override;
+
+  InputChannels LINSEL_{InputChannels::INPUT2};
 
   sensor::Sensor *output_volume_sensor_{nullptr};
   sensor::Sensor *input_gain_left_sensor_{nullptr};
@@ -129,6 +133,8 @@ class ES8388Component : public PollingComponent, public i2c::I2CDevice {
 
   bool setOutputVolume();
   bool setOutputVolume(uint8_t vol);
+  bool setInputChannels(InputChannels one);
+  bool setInputChannels(InputChannels left, InputChannels right);
 
   uint8_t getOutputVolume();
   uint8_t getInputGain();
@@ -145,8 +151,12 @@ template<typename... Ts> class ES8388ConfigureAction : public Action<Ts...> {
  public:
   ES8388ConfigureAction(ES8388Component *parent) : parent_(parent) {}
   TEMPLATABLE_VALUE(uint8_t, volume)
+  TEMPLATABLE_VALUE(InputChannels, input_channel)
 
-  void play(Ts... x) { this->parent_->setOutputVolume(this->volume_.value(x...)); }
+  void play(Ts... x) { 
+     this->parent_->setOutputVolume(this->volume_.value(x...)); 
+     this->parent_->setInputChannels(this->input_channel_.value(x...), this->input_channel_.value(x...));
+  }
 
  protected:
   ES8388Component *parent_;
